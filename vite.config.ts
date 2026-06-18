@@ -11,7 +11,7 @@ export default defineConfig(() => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'logo.png'],
+        includeAssets: ['favicon.ico', 'icon.png'],
         manifest: {
           name: 'MUMY IP Guard',
           short_name: 'MUMY',
@@ -23,9 +23,9 @@ export default defineConfig(() => {
           scope: '/',
           start_url: '/',
           icons: [
-            { src: '/logo.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-            { src: '/logo.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-            { src: '/logo.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+            { src: '/icon.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+            { src: '/icon.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+            { src: '/icon.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
           ],
         },
         workbox: {

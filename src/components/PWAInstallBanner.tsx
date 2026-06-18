@@ -65,7 +65,7 @@ export function PWAInstallBanner() {
       {/* Bottom banner */}
       <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-3 bg-[#111] border-t border-white/10 shadow-2xl safe-bottom">
         <div className="max-w-sm mx-auto flex items-center gap-3">
-          <img src="/logo.png" alt="MUMY" className="w-11 h-11 rounded-2xl shadow-lg shrink-0" />
+          <img src="/icon.png" alt="MUMY" className="w-11 h-11 rounded-2xl shadow-lg shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-white text-sm font-semibold leading-tight">Install MUMY IP Guard</p>
             <p className="text-slate-400 text-xs mt-0.5 leading-tight">
@@ -104,7 +104,7 @@ export function PWAInstallBanner() {
             {/* Header */}
             <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-white/8">
               <div className="flex items-center gap-3">
-                <img src="/logo.png" alt="MUMY" className="w-10 h-10 rounded-xl" />
+                <img src="/icon.png" alt="MUMY" className="w-10 h-10 rounded-xl" />
                 <div>
                   <p className="text-white font-bold text-base leading-tight">Add to Home Screen</p>
                   <p className="text-slate-500 text-xs">iPhone & iPad guide</p>
