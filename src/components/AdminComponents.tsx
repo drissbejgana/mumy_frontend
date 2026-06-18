@@ -12,8 +12,6 @@ import { UserProfile, ScanResult } from "../types";
 
 interface AdminStats {
   mrr: number;
-  totalRevenue: number;
-  churnRate: number;
   planDistribution: { free: number; pro: number; agency: number };
   verdictDistribution: { block: number; review: number; safe: number };
   users: UserProfile[];
@@ -163,16 +161,16 @@ function OverviewTab({ stats }: { stats: AdminStats }) {
       {/* KPI Row */}
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         <KPICard
-          label="MRR"
-          value={`$${stats.mrr.toLocaleString()}`}
-          sub="Monthly recurring revenue"
+          label="Est. MRR"
+          value={`$${(stats.mrr ?? 0).toLocaleString()}`}
+          sub={`Based on ${activeSubs} paid plan${activeSubs !== 1 ? "s" : ""}`}
           icon={<DollarSign className="w-5 h-5" />}
           accent="blue"
         />
         <KPICard
-          label="Total Revenue"
-          value={`$${stats.totalRevenue.toLocaleString()}`}
-          sub="Cumulative all-time"
+          label="Est. ARR"
+          value={`$${((stats.mrr ?? 0) * 12).toLocaleString()}`}
+          sub="MRR × 12 — not from Stripe"
           icon={<TrendingUp className="w-5 h-5" />}
           accent="green"
         />

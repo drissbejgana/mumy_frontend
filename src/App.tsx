@@ -16,6 +16,7 @@ import ResultDashboard from "./components/ResultDashboard";
 import { PrivacyPolicyView, TermsOfServiceView } from "./components/LegalTexts";
 import { AdminDashboard } from "./components/AdminComponents";
 import AdminLoginPage from "./components/AdminLoginPage";
+import { PWAInstallBanner } from "./components/PWAInstallBanner";
 import { useGoogleLogin } from "@react-oauth/google";
 import { apiFetch, setToken, clearAuth, getToken } from "./api";
 import { UserProfile, ScanResult } from "./types";
@@ -377,7 +378,8 @@ export default function App() {
 
   return (
     <div className={`min-h-screen font-sans antialiased text-gray-950 flex flex-col ${isMarketingContext ? "bg-[#0a0a0a]" : "bg-[#fafafa]"}`}>
-      
+      <PWAInstallBanner />
+
       {/* Visual Navigation Bar */}
       <nav className={`w-full py-4 px-6 border-b transition-colors relative z-50 ${isMarketingContext ? "bg-[#0a0a0a]/90 border-white/10 text-white" : "bg-white border-gray-150 text-gray-900"}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
