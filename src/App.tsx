@@ -1149,7 +1149,7 @@ export default function App() {
                       <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-gray-400">Email Address</label>
                       <input
                         type="email"
-                        placeholder="yaamnetwork@gmail.com"
+                        placeholder="example@gmail.com"
                         value={authEmail}
                         onChange={(e) => setAuthEmail(e.target.value)}
                         className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-xl text-sm font-sans focus:outline-none focus:border-brand-green"
