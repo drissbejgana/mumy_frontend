@@ -67,7 +67,7 @@ export function PWAInstallBanner() {
         <div className="max-w-sm mx-auto flex items-center gap-3">
           <img src="/icon.png" alt="MUMY" className="w-11 h-11 rounded-2xl shadow-lg shrink-0" />
           <div className="flex-1 min-w-0">
-            <p className="text-white text-sm font-semibold leading-tight">Install MUMY IP Guard</p>
+            <p className="text-white text-sm font-semibold leading-tight">Install MUMY</p>
             <p className="text-slate-400 text-xs mt-0.5 leading-tight">
               {ios ? "Add to Home Screen for quick access" : "Install for offline access & faster scans"}
             </p>

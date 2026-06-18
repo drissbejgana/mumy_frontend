@@ -60,6 +60,13 @@ export default function App() {
     else if (payment === "cancelled") setView("cancel");
   }, []);
 
+  // Redirect logged-in users away from landing page to scanner
+  useEffect(() => {
+    if (user && view === "landing") {
+      setView("scanner");
+    }
+  }, [user, view]);
+
   // Quick live synchronization when navigation happens
   useEffect(() => {
     if (user) {
@@ -384,8 +391,8 @@ export default function App() {
       <nav className={`w-full py-4 px-6 border-b transition-colors relative z-50 ${isMarketingContext ? "bg-[#0a0a0a]/90 border-white/10 text-white" : "bg-white border-gray-150 text-gray-900"}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
-          <button 
-            onClick={() => navigateTo("landing")} 
+          <button
+            onClick={() => navigateTo(user ? "scanner" : "landing")}
             className="flex items-center cursor-pointer text-left focus:outline-none"
             aria-label="Home"
           >
@@ -394,74 +401,76 @@ export default function App() {
 
           {/* Nav links (Desktop Only) */}
           <div className="hidden lg:flex items-center gap-6 text-xs font-space font-bold uppercase tracking-wider">
-            <button 
-              onClick={() => scrollToSection("overview")} 
-              className={`hover:text-[#2cff05] transition-colors cursor-pointer focus:outline-none ${isMarketingContext ? "text-gray-300" : "text-gray-700"}`}
-            >
-              Overview
-            </button>
-            <button 
-              onClick={() => scrollToSection("how-it-works")} 
-              className={`hover:text-[#2cff05] transition-colors cursor-pointer focus:outline-none ${isMarketingContext ? "text-gray-300" : "text-gray-700"}`}
-            >
-              How it works
-            </button>
-            <button 
-              onClick={() => scrollToSection("safety-stack")} 
-              className={`hover:text-[#2cff05] transition-colors cursor-pointer focus:outline-none ${isMarketingContext ? "text-gray-300" : "text-gray-700"}`}
-            >
-              Safety Stack
-            </button>
-            <button 
-              onClick={() => scrollToSection("marketplaces")} 
-              className={`hover:text-[#2cff05] transition-colors cursor-pointer focus:outline-none ${isMarketingContext ? "text-gray-300" : "text-gray-700"}`}
-            >
-              Marketplaces
-            </button>
-            <button 
-              onClick={() => scrollToSection("pricing")} 
-              className={`hover:text-[#2cff05] transition-colors cursor-pointer focus:outline-none ${isMarketingContext ? "text-gray-300" : "text-gray-700"}`}
-            >
-              Pricing
-            </button>
-            <button 
-              onClick={() => scrollToSection("faq")} 
-              className={`hover:text-[#2cff05] transition-colors cursor-pointer focus:outline-none ${isMarketingContext ? "text-gray-300" : "text-gray-700"}`}
-            >
-              FAQ
-            </button>
-
-            <span className="text-gray-600 opacity-40">|</span>
-
-            <button 
-              onClick={() => navigateTo("scanner")} 
-              className={`hover:text-brand-green text-[#2cff05] transition-colors cursor-pointer focus:outline-none ${!isMarketingContext ? "text-[#2323ff] font-extrabold" : ""}`}
-            >
-              Analyze Listing
-            </button>
-            {user && (
+            {user ? (
+              /* Dashboard nav — only the three app sections */
               <>
-                <button 
-                  onClick={() => navigateTo("history")} 
-                  className={`hover:text-[#2cff50] transition-colors cursor-pointer focus:outline-none ${isMarketingContext ? "text-gray-300" : "text-gray-700"}`}
+                <button
+                  onClick={() => navigateTo("scanner")}
+                  className={`transition-colors cursor-pointer focus:outline-none ${view === "scanner" ? "text-[#2323ff] font-extrabold" : "text-gray-600 hover:text-[#2323ff]"}`}
+                >
+                  Analyze Listing
+                </button>
+                <button
+                  onClick={() => navigateTo("history")}
+                  className={`transition-colors cursor-pointer focus:outline-none ${view === "history" ? "text-[#2323ff] font-extrabold" : "text-gray-600 hover:text-[#2323ff]"}`}
                 >
                   My Scans History
                 </button>
-                <button 
-                  onClick={() => navigateTo("dashboard")} 
-                  className={`hover:text-[#2cff50] transition-colors cursor-pointer focus:outline-none ${isMarketingContext ? "text-gray-300" : "text-gray-700"}`}
+                <button
+                  onClick={() => navigateTo("dashboard")}
+                  className={`transition-colors cursor-pointer focus:outline-none ${view === "dashboard" ? "text-[#2323ff] font-extrabold" : "text-gray-600 hover:text-[#2323ff]"}`}
                 >
                   Dashboard
                 </button>
+                {user.role === "admin" && (
+                  <button
+                    onClick={() => navigateTo("admin")}
+                    className="text-red-500 hover:text-red-400 font-extrabold flex items-center gap-1.5 cursor-pointer focus:outline-none text-xs font-space border border-red-500/30 px-2.5 py-1 rounded-lg hover:bg-red-500/10 transition-colors"
+                  >
+                    <Shield className="w-3.5 h-3.5" /> Admin
+                  </button>
+                )}
               </>
-            )}
-            {user?.role === "admin" && (
-              <button
-                onClick={() => navigateTo("admin")}
-                className="text-red-500 hover:text-red-400 font-extrabold flex items-center gap-1.5 cursor-pointer focus:outline-none text-xs font-space border border-red-500/30 px-2.5 py-1 rounded-lg hover:bg-red-500/10 transition-colors"
-              >
-                <Shield className="w-3.5 h-3.5" /> Admin
-              </button>
+            ) : (
+              /* Marketing nav — landing page sections */
+              <>
+                <button
+                  onClick={() => scrollToSection("overview")}
+                  className="text-gray-300 hover:text-[#2cff05] transition-colors cursor-pointer focus:outline-none"
+                >
+                  Overview
+                </button>
+                <button
+                  onClick={() => scrollToSection("how-it-works")}
+                  className="text-gray-300 hover:text-[#2cff05] transition-colors cursor-pointer focus:outline-none"
+                >
+                  How it works
+                </button>
+                <button
+                  onClick={() => scrollToSection("safety-stack")}
+                  className="text-gray-300 hover:text-[#2cff05] transition-colors cursor-pointer focus:outline-none"
+                >
+                  Safety Stack
+                </button>
+                <button
+                  onClick={() => scrollToSection("marketplaces")}
+                  className="text-gray-300 hover:text-[#2cff05] transition-colors cursor-pointer focus:outline-none"
+                >
+                  Marketplaces
+                </button>
+                <button
+                  onClick={() => scrollToSection("pricing")}
+                  className="text-gray-300 hover:text-[#2cff05] transition-colors cursor-pointer focus:outline-none"
+                >
+                  Pricing
+                </button>
+                <button
+                  onClick={() => scrollToSection("faq")}
+                  className="text-gray-300 hover:text-[#2cff05] transition-colors cursor-pointer focus:outline-none"
+                >
+                  FAQ
+                </button>
+              </>
             )}
           </div>
 
@@ -546,107 +555,44 @@ export default function App() {
       {/* Mobile Menu Dropdown Panel */}
       {isMobileMenuOpen && (
         <div className={`lg:hidden border-b z-50 animate-in slide-in-from-top duration-200 ${
-          isMarketingContext 
-            ? "bg-[#0b0b0b] border-white/10 text-white" 
-            : "bg-white border-gray-200 text-gray-900"
+          user
+            ? "bg-white border-gray-200 text-gray-900"
+            : "bg-[#0b0b0b] border-white/10 text-white"
         }`}>
           <div className="flex flex-col p-6 space-y-4 text-xs font-space font-bold uppercase tracking-wider">
-            <button 
-              onClick={() => scrollToSection("overview")}
-              className="text-left w-full py-2 hover:text-[#2cff05] transition-colors focus:outline-none"
-            >
-              Overview
-            </button>
-            <button 
-              onClick={() => scrollToSection("how-it-works")}
-              className="text-left w-full py-2 hover:text-[#2cff05] transition-colors focus:outline-none"
-            >
-              How it works
-            </button>
-            <button 
-              onClick={() => scrollToSection("safety-stack")}
-              className="text-left w-full py-2 hover:text-[#2cff05] transition-colors focus:outline-none"
-            >
-              Safety Stack
-            </button>
-            <button 
-              onClick={() => scrollToSection("marketplaces")}
-              className="text-left w-full py-2 hover:text-[#2cff05] transition-colors focus:outline-none"
-            >
-              Marketplaces
-            </button>
-            <button 
-              onClick={() => scrollToSection("pricing")}
-              className="text-left w-full py-2 hover:text-[#2cff05] transition-colors focus:outline-none"
-            >
-              Pricing
-            </button>
-            <button 
-              onClick={() => scrollToSection("faq")}
-              className="text-left w-full py-2 hover:text-[#2cff05] transition-colors focus:outline-none"
-            >
-              FAQ
-            </button>
-
-            <div className="h-[1px] bg-white/10 my-1 font-mono" />
-
-            <button 
-              onClick={() => {
-                navigateTo("scanner");
-                setIsMobileMenuOpen(false);
-              }}
-              className="text-left w-full py-2 text-[#2cff05] hover:text-white transition-colors focus:outline-none"
-            >
-              ★ Analyze Listing
-            </button>
-
-            {!user ? (
-              <div className="flex flex-col gap-2 pt-2">
-                <button 
-                  onClick={() => {
-                    navigateTo("login");
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className={`w-full text-center py-2.5 rounded-xl border text-xs focus:outline-none ${
-                    isMarketingContext ? "border-white/15 hover:bg-white/5" : "border-gray-250 hover:bg-gray-50"
-                  }`}
+            {user ? (
+              /* Dashboard mobile menu */
+              <>
+                <button
+                  onClick={() => navigateTo("scanner")}
+                  className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "scanner" ? "text-[#2323ff]" : "text-gray-700 hover:text-[#2323ff]"}`}
                 >
-                  Sign In
+                  Analyze Listing
                 </button>
-                <button 
-                  onClick={() => {
-                    setIsSignUp(true);
-                    navigateTo("login");
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full text-center py-2.5 rounded-xl bg-[#2323ff] text-white hover:bg-blue-700 transition-colors focus:outline-none text-xs text-center"
-                >
-                  Sign Up Free
-                </button>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-2 pt-2">
-                <button 
-                  onClick={() => {
-                    navigateTo("history");
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="text-left w-full py-2 text-gray-400 hover:text-[#2cff05] transition-colors focus:outline-none"
+                <button
+                  onClick={() => navigateTo("history")}
+                  className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "history" ? "text-[#2323ff]" : "text-gray-700 hover:text-[#2323ff]"}`}
                 >
                   My Scans History
                 </button>
-                <button 
-                  onClick={() => {
-                    navigateTo("dashboard");
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="text-left w-full py-2 text-gray-400 hover:text-[#2cff05] transition-colors focus:outline-none"
+                <button
+                  onClick={() => navigateTo("dashboard")}
+                  className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "dashboard" ? "text-[#2323ff]" : "text-gray-700 hover:text-[#2323ff]"}`}
                 >
                   Dashboard
                 </button>
-                <div className={`h-[1px] my-1 ${isMarketingContext ? "bg-white/10" : "bg-gray-150"}`} />
-                <button 
+                {user.role === "admin" && (
+                  <button
+                    onClick={() => navigateTo("admin")}
+                    className="text-left w-full py-2 text-red-500 hover:text-red-400 transition-colors focus:outline-none"
+                  >
+                    Admin Console
+                  </button>
+                )}
+                <div className="h-[1px] my-1 bg-gray-150" />
+                <button
                   onClick={() => {
+                    clearAuth();
                     setUser(null);
                     setView("landing");
                     setIsMobileMenuOpen(false);
@@ -655,7 +601,69 @@ export default function App() {
                 >
                   Logout
                 </button>
-              </div>
+              </>
+            ) : (
+              /* Marketing mobile menu */
+              <>
+                <button
+                  onClick={() => scrollToSection("overview")}
+                  className="text-left w-full py-2 hover:text-[#2cff05] transition-colors focus:outline-none"
+                >
+                  Overview
+                </button>
+                <button
+                  onClick={() => scrollToSection("how-it-works")}
+                  className="text-left w-full py-2 hover:text-[#2cff05] transition-colors focus:outline-none"
+                >
+                  How it works
+                </button>
+                <button
+                  onClick={() => scrollToSection("safety-stack")}
+                  className="text-left w-full py-2 hover:text-[#2cff05] transition-colors focus:outline-none"
+                >
+                  Safety Stack
+                </button>
+                <button
+                  onClick={() => scrollToSection("marketplaces")}
+                  className="text-left w-full py-2 hover:text-[#2cff05] transition-colors focus:outline-none"
+                >
+                  Marketplaces
+                </button>
+                <button
+                  onClick={() => scrollToSection("pricing")}
+                  className="text-left w-full py-2 hover:text-[#2cff05] transition-colors focus:outline-none"
+                >
+                  Pricing
+                </button>
+                <button
+                  onClick={() => scrollToSection("faq")}
+                  className="text-left w-full py-2 hover:text-[#2cff05] transition-colors focus:outline-none"
+                >
+                  FAQ
+                </button>
+                <div className="h-[1px] bg-white/10 my-1" />
+                <div className="flex flex-col gap-2 pt-2">
+                  <button
+                    onClick={() => {
+                      navigateTo("login");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full text-center py-2.5 rounded-xl border border-white/15 hover:bg-white/5 text-xs focus:outline-none"
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsSignUp(true);
+                      navigateTo("login");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full text-center py-2.5 rounded-xl bg-[#2323ff] text-white hover:bg-blue-700 transition-colors focus:outline-none text-xs"
+                  >
+                    Sign Up Free
+                  </button>
+                </div>
+              </>
             )}
           </div>
         </div>
