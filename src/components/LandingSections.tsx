@@ -147,7 +147,34 @@ export function Hero({ onStartScan }: { onStartScan: () => void }) {
   );
 }
 
-// 2. FEAR SECTION COMPONENT
+// 2. FEATURED ON STRIP
+export function FeaturedOnSection() {
+  return (
+    <section className="py-10 bg-brand-dark border-b border-white/5 relative z-10">
+      <div className="max-w-4xl mx-auto px-4 flex flex-col items-center gap-6">
+        <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-gray-600">
+          As featured on
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-10">
+          <img
+            src="/logo-indiehackers.webp"
+            alt="Indie Hackers"
+            className="h-7 opacity-50 hover:opacity-90 transition-opacity duration-300 object-contain"
+            draggable={false}
+          />
+          <img
+            src="/logo-wefunders.webp"
+            alt="Wefunder"
+            className="h-7 opacity-50 hover:opacity-90 transition-opacity duration-300 object-contain"
+            draggable={false}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// 3. FEAR SECTION COMPONENT
 export function FearSection() {
   return (
     <section className="py-24 bg-brand-dark/90 text-white border-y border-white/5 relative z-10">

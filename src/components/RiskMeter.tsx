@@ -42,8 +42,8 @@ export default function RiskMeter({ score, confidence }: RiskMeterProps) {
   const verdict = getVerdictLabel(score);
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
-      <h3 className="font-space font-semibold text-gray-700 text-sm mb-4 uppercase tracking-wide">
+    <div className="flex flex-col items-center justify-center p-6 bg-[#111111] border border-white/10 rounded-2xl">
+      <h3 className="font-space font-semibold text-gray-400 text-xs mb-4 uppercase tracking-widest">
         Intellectual Property Check
       </h3>
 
@@ -53,11 +53,10 @@ export default function RiskMeter({ score, confidence }: RiskMeterProps) {
           <path
             d="M 10 90 A 80 80 0 0 1 170 90"
             fill="none"
-            stroke="#f3f4f6"
+            stroke="rgba(255,255,255,0.08)"
             strokeWidth={strokeWidth}
             strokeLinecap="round"
           />
-
           {/* Filled Danger Arc */}
           <path
             d="M 10 90 A 80 80 0 0 1 170 90"
@@ -71,29 +70,27 @@ export default function RiskMeter({ score, confidence }: RiskMeterProps) {
           />
         </svg>
 
-        {/* Needle Pointer Pin */}
-        <div 
-          className="absolute bottom-0 left-1/2 w-2 h-16 bg-gray-800 rounded-full origin-bottom transition-all duration-1000 ease-out"
-          style={{
-            transform: `translateX(-50%) rotate(${needleRotation}deg)`,
-          }}
+        {/* Needle */}
+        <div
+          className="absolute bottom-0 left-1/2 w-1.5 h-16 bg-white/80 rounded-full origin-bottom transition-all duration-1000 ease-out"
+          style={{ transform: `translateX(-50%) rotate(${needleRotation}deg)` }}
         >
-          <div className="absolute top-0 left-1/2 -translateX-1/2 w-4 h-4 bg-gray-800 rounded-full -mt-2"></div>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-white rounded-full -mt-1.5" />
         </div>
-        
-        {/* Core Pin Center */}
-        <div className="absolute bottom-0 left-1/2 -translateX-1/2 w-8 h-4 bg-gray-800 rounded-t-full"></div>
+
+        {/* Center pin */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-7 h-3.5 bg-[#111111] border-t border-white/10 rounded-t-full" />
       </div>
 
       <div className="text-center">
-        <div className="text-3xl font-space font-extrabold text-gray-900 leading-none mb-1">
+        <div className="text-3xl font-space font-extrabold text-white leading-none mb-1">
           {score}%
         </div>
         <div className={`inline-flex items-center px-4 py-1 rounded-full border text-xs font-mono font-bold uppercase mb-2 ${verdict.bg} ${verdict.color}`}>
           {verdict.label}
         </div>
-        <p className="text-xs text-gray-400 font-medium">
-          Detection Confidence: <span className="text-gray-600 font-bold">{confidence}%</span>
+        <p className="text-xs text-gray-600 font-medium">
+          Detection Confidence: <span className="text-gray-400 font-bold">{confidence}%</span>
         </p>
       </div>
     </div>

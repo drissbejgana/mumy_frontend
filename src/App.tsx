@@ -8,7 +8,7 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 
 import FAQ from "./components/FAQ";
-import { Hero, FearSection, HowItWorks, AgentExplainer, PricingSection, Footer, MarketplacesSection } from "./components/LandingSections";
+import { Hero, FeaturedOnSection, FearSection, HowItWorks, AgentExplainer, PricingSection, Footer, MarketplacesSection } from "./components/LandingSections";
 import { LogoIcon } from "./components/LogoIcon";
 import ScanForm from "./components/ScanForm";
 import ScanProgress from "./components/ScanProgress";
@@ -48,6 +48,9 @@ export default function App() {
   // Alert Dialog Deletion States
   const [deleteConfirmScanId, setDeleteConfirmScanId] = useState<string | null>(null);
 
+  // Pricing modal
+  const [showPricingModal, setShowPricingModal] = useState(false);
+
   // Restore session from localStorage and detect Stripe payment redirects
   useEffect(() => {
     const saved = localStorage.getItem("mumy_user");
@@ -58,6 +61,9 @@ export default function App() {
     const payment = params.get("payment");
     if (payment === "success") setView("success");
     else if (payment === "cancelled") setView("cancel");
+    // Persist affiliate referral code across the session
+    const ref = params.get("ref");
+    if (ref) sessionStorage.setItem("mumy_ref", ref);
   }, []);
 
   // Redirect logged-in users away from landing page to scanner
@@ -166,9 +172,11 @@ export default function App() {
         body: JSON.stringify({
           email: authEmail,
           password: authPassword,
-          displayName: authDisplayName
+          displayName: authDisplayName,
+          refCode: sessionStorage.getItem("mumy_ref") ?? undefined,
         })
       });
+      sessionStorage.removeItem("mumy_ref");
       const data = await response.json();
       if (data.success) {
         setToken(data.token);
@@ -189,8 +197,12 @@ export default function App() {
       try {
         const response = await apiFetch("/api/auth/google", {
           method: "POST",
-          body: JSON.stringify({ accessToken: tokenResponse.access_token })
+          body: JSON.stringify({
+            accessToken: tokenResponse.access_token,
+            refCode: sessionStorage.getItem("mumy_ref") ?? undefined,
+          })
         });
+        sessionStorage.removeItem("mumy_ref");
         const data = await response.json();
         if (data.success) {
           setToken(data.token);
@@ -384,11 +396,11 @@ export default function App() {
   const isMarketingContext = ["landing", "privacy", "terms", "login", "signup", "success", "cancel"].includes(view);
 
   return (
-    <div className={`min-h-screen font-sans antialiased text-gray-950 flex flex-col ${isMarketingContext ? "bg-[#0a0a0a]" : "bg-[#fafafa]"}`}>
+    <div className="min-h-screen font-sans antialiased text-white flex flex-col bg-[#0a0a0a]">
       <PWAInstallBanner />
 
       {/* Visual Navigation Bar */}
-      <nav className={`w-full py-4 px-6 border-b transition-colors relative z-50 ${isMarketingContext ? "bg-[#0a0a0a]/90 border-white/10 text-white" : "bg-white border-gray-150 text-gray-900"}`}>
+      <nav className="w-full py-4 px-6 border-b transition-colors relative z-50 bg-[#0a0a0a]/90 border-white/10 text-white">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
           <button
@@ -406,19 +418,19 @@ export default function App() {
               <>
                 <button
                   onClick={() => navigateTo("scanner")}
-                  className={`transition-colors cursor-pointer focus:outline-none ${view === "scanner" ? "text-[#2323ff] font-extrabold" : "text-gray-600 hover:text-[#2323ff]"}`}
+                  className={`transition-colors cursor-pointer focus:outline-none ${view === "scanner" ? "text-[#2cff05] font-extrabold" : "text-gray-400 hover:text-white"}`}
                 >
                   Analyze Listing
                 </button>
                 <button
                   onClick={() => navigateTo("history")}
-                  className={`transition-colors cursor-pointer focus:outline-none ${view === "history" ? "text-[#2323ff] font-extrabold" : "text-gray-600 hover:text-[#2323ff]"}`}
+                  className={`transition-colors cursor-pointer focus:outline-none ${view === "history" ? "text-[#2cff05] font-extrabold" : "text-gray-400 hover:text-white"}`}
                 >
                   My Scans History
                 </button>
                 <button
                   onClick={() => navigateTo("dashboard")}
-                  className={`transition-colors cursor-pointer focus:outline-none ${view === "dashboard" ? "text-[#2323ff] font-extrabold" : "text-gray-600 hover:text-[#2323ff]"}`}
+                  className={`transition-colors cursor-pointer focus:outline-none ${view === "dashboard" ? "text-[#2cff05] font-extrabold" : "text-gray-400 hover:text-white"}`}
                 >
                   Dashboard
                 </button>
@@ -480,16 +492,16 @@ export default function App() {
             {user ? (
               <div className="flex items-center gap-3">
                 <div className="hidden sm:flex flex-col text-right">
-                  <span className={`text-xs font-bold leading-none ${isMarketingContext ? "text-white" : "text-gray-900"}`}>
+                  <span className="text-xs font-bold leading-none text-white">
                     {user.displayName}
                   </span>
-                  <span className="text-[10px] font-mono text-brand-green font-bold mt-0.5">
+                  <span className="text-[10px] font-mono text-[#2cff05] font-bold mt-0.5">
                     {user.plan.toUpperCase()} LICENSE
                   </span>
                 </div>
                 <button
                   onClick={() => navigateTo("dashboard")}
-                  className="p-2.5 bg-brand-blue/10 rounded-xl text-[#2323ff] hover:bg-brand-blue/20 transition-all cursor-pointer focus:outline-none"
+                  className="p-2.5 bg-white/10 rounded-xl text-white hover:bg-white/20 transition-all cursor-pointer focus:outline-none"
                   title="My Profile"
                 >
                   <User className="w-4 h-4" />
@@ -500,7 +512,7 @@ export default function App() {
                     setUser(null);
                     setView("landing");
                   }}
-                  className="p-2.5 text-gray-400 hover:text-red-500 rounded-xl hover:bg-gray-100 transition-colors inline-flex cursor-pointer focus:outline-none"
+                  className="p-2.5 text-gray-400 hover:text-red-400 rounded-xl hover:bg-white/10 transition-colors inline-flex cursor-pointer focus:outline-none"
                   title="Logout"
                 >
                   <LogOut className="w-4 h-4" />
@@ -510,7 +522,7 @@ export default function App() {
               <div className="hidden sm:flex items-center gap-3">
                 <button
                   onClick={() => navigateTo("login")}
-                  className={`px-4 py-2 text-xs md:text-sm font-space font-bold cursor-pointer hover:underline focus:outline-none ${isMarketingContext ? "text-gray-300" : "text-gray-800"}`}
+                  className="px-4 py-2 text-xs md:text-sm font-space font-bold cursor-pointer hover:underline focus:outline-none text-gray-300"
                 >
                   Sign In
                 </button>
@@ -529,11 +541,7 @@ export default function App() {
             {/* Mobile Responsive Hamburger Icon */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`p-2 rounded-xl border lg:hidden focus:outline-none transition-all ${
-                isMarketingContext 
-                  ? "bg-white/5 border-white/10 text-white hover:bg-white/10" 
-                  : "bg-gray-100 border-gray-200 text-gray-800 hover:bg-gray-250"
-              }`}
+              className="p-2 rounded-xl border lg:hidden focus:outline-none transition-all bg-white/5 border-white/10 text-white hover:bg-white/10"
               aria-label="Toggle Menu"
             >
               {isMobileMenuOpen ? (
@@ -554,42 +562,38 @@ export default function App() {
 
       {/* Mobile Menu Dropdown Panel */}
       {isMobileMenuOpen && (
-        <div className={`lg:hidden border-b z-50 animate-in slide-in-from-top duration-200 ${
-          user
-            ? "bg-white border-gray-200 text-gray-900"
-            : "bg-[#0b0b0b] border-white/10 text-white"
-        }`}>
+        <div className="lg:hidden border-b z-50 animate-in slide-in-from-top duration-200 bg-[#0b0b0b] border-white/10 text-white">
           <div className="flex flex-col p-6 space-y-4 text-xs font-space font-bold uppercase tracking-wider">
             {user ? (
               /* Dashboard mobile menu */
               <>
                 <button
                   onClick={() => navigateTo("scanner")}
-                  className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "scanner" ? "text-[#2323ff]" : "text-gray-700 hover:text-[#2323ff]"}`}
+                  className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "scanner" ? "text-[#2cff05]" : "text-gray-400 hover:text-white"}`}
                 >
                   Analyze Listing
                 </button>
                 <button
                   onClick={() => navigateTo("history")}
-                  className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "history" ? "text-[#2323ff]" : "text-gray-700 hover:text-[#2323ff]"}`}
+                  className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "history" ? "text-[#2cff05]" : "text-gray-400 hover:text-white"}`}
                 >
                   My Scans History
                 </button>
                 <button
                   onClick={() => navigateTo("dashboard")}
-                  className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "dashboard" ? "text-[#2323ff]" : "text-gray-700 hover:text-[#2323ff]"}`}
+                  className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "dashboard" ? "text-[#2cff05]" : "text-gray-400 hover:text-white"}`}
                 >
                   Dashboard
                 </button>
                 {user.role === "admin" && (
                   <button
                     onClick={() => navigateTo("admin")}
-                    className="text-left w-full py-2 text-red-500 hover:text-red-400 transition-colors focus:outline-none"
+                    className="text-left w-full py-2 text-red-400 hover:text-red-300 transition-colors focus:outline-none"
                   >
                     Admin Console
                   </button>
                 )}
-                <div className="h-[1px] my-1 bg-gray-150" />
+                <div className="h-[1px] my-1 bg-white/10" />
                 <button
                   onClick={() => {
                     clearAuth();
@@ -597,7 +601,7 @@ export default function App() {
                     setView("landing");
                     setIsMobileMenuOpen(false);
                   }}
-                  className="text-left w-full py-2 text-red-500 hover:text-red-400 transition-colors focus:outline-none"
+                  className="text-left w-full py-2 text-red-400 hover:text-red-300 transition-colors focus:outline-none"
                 >
                   Logout
                 </button>
@@ -686,6 +690,7 @@ export default function App() {
             {view === "landing" && (
               <div className="w-full text-white shrink-0">
                 <Hero onStartScan={() => navigateTo("scanner")} />
+                <FeaturedOnSection />
                 <FearSection />
                 <HowItWorks />
                 <AgentExplainer />
@@ -701,13 +706,13 @@ export default function App() {
               <div className="max-w-6xl mx-auto px-4 py-12">
                 {!user ? (
                   // If unauthenticated try viewing scanner trigger CTA auth guard
-                  <div className="p-8 max-w-md mx-auto bg-white border border-gray-150 rounded-2xl text-center space-y-6 shadow-sm">
-                    <div className="p-3 bg-brand-blue/5 rounded-full inline-flex text-[#2323ff]">
+                  <div className="p-8 max-w-md mx-auto bg-[#111111] border border-white/10 rounded-2xl text-center space-y-6">
+                    <div className="p-3 bg-[#2323ff]/10 rounded-full inline-flex text-[#2323ff]">
                       <Lock className="w-8 h-8" />
                     </div>
                     <div className="space-y-1.5">
-                      <h3 className="font-space font-extrabold text-xl text-gray-900">Scanner Protection Alert</h3>
-                      <p className="text-sm text-gray-500 font-sans">
+                      <h3 className="font-space font-extrabold text-xl text-white">Scanner Protection Alert</h3>
+                      <p className="text-sm text-gray-400 font-sans">
                         You must log in to execute live pre-publication audits on our AI agent sandbox.
                       </p>
                     </div>
@@ -721,11 +726,11 @@ export default function App() {
                 ) : (
                   <div className="space-y-8">
                     {/* Header */}
-                    <div className="border-b border-gray-200 pb-5">
-                      <h1 className="text-2xl md:text-4xl font-space font-extrabold text-gray-900">
+                    <div className="border-b border-white/10 pb-5">
+                      <h1 className="text-2xl md:text-4xl font-space font-extrabold text-white">
                         IP Scanner Console
                       </h1>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-400">
                         Upload your thumbnail listings. Our parallel detector prevents store suspension in 8 seconds.
                       </p>
                     </div>
@@ -751,19 +756,19 @@ export default function App() {
             {/* VIEW 3: USER SCANS HISTORY */}
             {view === "history" && (
               <div className="max-w-7xl mx-auto px-4 py-12 space-y-8">
-                <div className="border-b border-gray-200 pb-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div className="border-b border-white/10 pb-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                   <div>
-                    <h1 className="text-2xl md:text-4xl font-space font-extrabold text-gray-900">
+                    <h1 className="text-2xl md:text-4xl font-space font-extrabold text-white">
                       My Pre-Publication Audits
                     </h1>
-                    <p className="text-sm text-gray-500">
-                      Review complete compliance history.purged elements remain cached for 24 hours.
+                    <p className="text-sm text-gray-400">
+                      Review complete compliance history. Purged elements remain cached for 24 hours.
                     </p>
                   </div>
                   {scansHistory.length > 0 && (
                     <button
                       onClick={triggerCSVDownload}
-                      className="bg-white border border-gray-200 hover:bg-gray-50 text-gray-800 px-4 py-3 rounded-xl text-xs font-space font-extrabold inline-flex items-center gap-2 cursor-pointer shadow-2xs"
+                      className="bg-white/5 border border-white/10 hover:bg-white/10 text-white px-4 py-3 rounded-xl text-xs font-space font-extrabold inline-flex items-center gap-2 cursor-pointer"
                     >
                       <Download className="w-4 h-4" /> Export CSV Ledger
                     </button>
@@ -771,11 +776,11 @@ export default function App() {
                 </div>
 
                 {scansHistory.length === 0 ? (
-                  <div className="p-12 text-center bg-white border border-gray-200 rounded-2xl max-w-md mx-auto space-y-4 shadow-3xs">
-                    <Database className="w-12 h-12 text-gray-350 mx-auto" />
+                  <div className="p-12 text-center bg-[#111111] border border-white/10 rounded-2xl max-w-md mx-auto space-y-4">
+                    <Database className="w-12 h-12 text-gray-600 mx-auto" />
                     <div>
-                      <h4 className="font-space font-bold text-gray-800 text-base">No previous scans found</h4>
-                      <p className="text-xs text-gray-400 mt-0.5">Your analyzed products will appear here once processed.</p>
+                      <h4 className="font-space font-bold text-white text-base">No previous scans found</h4>
+                      <p className="text-xs text-gray-500 mt-0.5">Your analyzed products will appear here once processed.</p>
                     </div>
                     <button
                       onClick={() => navigateTo("scanner")}
@@ -787,46 +792,46 @@ export default function App() {
                 ) : (
                   <div className="space-y-4">
                     {/* Filters */}
-                    <div className="bg-white p-5 border border-gray-150 rounded-2xl flex flex-wrap gap-4 items-center">
+                    <div className="bg-[#111111] p-5 border border-white/10 rounded-2xl flex flex-wrap gap-4 items-center">
                       <div className="inline-flex items-center gap-1.5 text-xs text-gray-500 font-bold font-space uppercase">
-                        <Filter className="w-4 h-4 text-gray-400" />
+                        <Filter className="w-4 h-4 text-gray-600" />
                         Quick Filters:
                       </div>
-                      
+
                       {/* Marketplace Filter */}
                       <select
                         value={historyFilterMarketplace}
                         onChange={(e) => setHistoryFilterMarketplace(e.target.value)}
-                        className="bg-gray-50 border border-gray-200 p-2 rounded-xl text-xs font-space font-bold outline-none focus:border-[#2323ff]"
+                        className="bg-white/5 border border-white/10 text-white p-2 rounded-xl text-xs font-space font-bold outline-none focus:border-[#2323ff]"
                       >
-                        <option value="all">Every Marketplace</option>
-                        <option value="All Marketplaces">All Marketplaces (Global)</option>
-                        <option value="Etsy">Etsy</option>
-                        <option value="Redbubble">Redbubble</option>
-                        <option value="Amazon Merch">Amazon Merch</option>
-                        <option value="Teepublic">Teepublic</option>
-                        <option value="Society6">Society6</option>
-                        <option value="Zazzle">Zazzle</option>
-                        <option value="Spring">Spring (TeeSpring)</option>
-                        <option value="Spreadshirt">Spreadshirt</option>
-                        <option value="CafePress">CafePress</option>
-                        <option value="Printify">Printify</option>
-                        <option value="Printful">Printful</option>
-                        <option value="eBay">eBay</option>
-                        <option value="Shopify">Shopify</option>
-                        <option value="WooCommerce">WooCommerce</option>
+                        <option value="all" className="bg-[#111111]">Every Marketplace</option>
+                        <option value="All Marketplaces" className="bg-[#111111]">All Marketplaces (Global)</option>
+                        <option value="Etsy" className="bg-[#111111]">Etsy</option>
+                        <option value="Redbubble" className="bg-[#111111]">Redbubble</option>
+                        <option value="Amazon Merch" className="bg-[#111111]">Amazon Merch</option>
+                        <option value="Teepublic" className="bg-[#111111]">Teepublic</option>
+                        <option value="Society6" className="bg-[#111111]">Society6</option>
+                        <option value="Zazzle" className="bg-[#111111]">Zazzle</option>
+                        <option value="Spring" className="bg-[#111111]">Spring (TeeSpring)</option>
+                        <option value="Spreadshirt" className="bg-[#111111]">Spreadshirt</option>
+                        <option value="CafePress" className="bg-[#111111]">CafePress</option>
+                        <option value="Printify" className="bg-[#111111]">Printify</option>
+                        <option value="Printful" className="bg-[#111111]">Printful</option>
+                        <option value="eBay" className="bg-[#111111]">eBay</option>
+                        <option value="Shopify" className="bg-[#111111]">Shopify</option>
+                        <option value="WooCommerce" className="bg-[#111111]">WooCommerce</option>
                       </select>
 
                       {/* Verdict Filter */}
                       <select
                         value={historyFilterVerdict}
                         onChange={(e) => setHistoryFilterVerdict(e.target.value)}
-                        className="bg-gray-50 border border-gray-200 p-2 rounded-xl text-xs font-space font-bold outline-none focus:border-[#2323ff]"
+                        className="bg-white/5 border border-white/10 text-white p-2 rounded-xl text-xs font-space font-bold outline-none focus:border-[#2323ff]"
                       >
-                        <option value="all">Every Verdict</option>
-                        <option value="BLOCK_LISTING">BLOCK_LISTING</option>
-                        <option value="MANUAL_REVIEW">MANUAL_REVIEW</option>
-                        <option value="SAFE_TO_PUBLISH">SAFE_TO_PUBLISH</option>
+                        <option value="all" className="bg-[#111111]">Every Verdict</option>
+                        <option value="BLOCK_LISTING" className="bg-[#111111]">BLOCK_LISTING</option>
+                        <option value="MANUAL_REVIEW" className="bg-[#111111]">MANUAL_REVIEW</option>
+                        <option value="SAFE_TO_PUBLISH" className="bg-[#111111]">SAFE_TO_PUBLISH</option>
                       </select>
 
                       <button
@@ -834,54 +839,54 @@ export default function App() {
                           setHistoryFilterMarketplace("all");
                           setHistoryFilterVerdict("all");
                         }}
-                        className="text-xs text-[#2323ff] font-space font-bold ml-auto hover:underline"
+                        className="text-xs text-[#2cff05] font-space font-bold ml-auto hover:underline"
                       >
                         Reset Filters
                       </button>
                     </div>
 
                     {/* Table View */}
-                    <div className="bg-white border border-gray-150 rounded-2xl overflow-hidden shadow-sm">
+                    <div className="bg-[#111111] border border-white/10 rounded-2xl overflow-hidden">
                       <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse text-xs md:text-sm">
                           <thead>
-                            <tr className="bg-gray-100 font-space font-bold text-gray-600 border-b border-gray-150">
+                            <tr className="bg-white/5 font-space font-bold text-gray-400 border-b border-white/10">
                               <th className="p-4">Visual Listing</th>
                               <th className="p-4">Channel Outlet</th>
-                              <th className="p-4">Verdict Verdict</th>
+                              <th className="p-4">Verdict</th>
                               <th className="p-4">Security Score</th>
                               <th className="p-4">Forensic Actions</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-gray-100 font-sans">
+                          <tbody className="divide-y divide-white/5 font-sans">
                             {filteredHistory.map((scan) => (
-                              <tr key={scan.scanId} className="hover:bg-gray-50/70">
+                              <tr key={scan.scanId} className="hover:bg-white/5 transition-colors">
                                 <td className="p-4 flex items-center gap-3">
-                                  <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-150 bg-gray-50 shrink-0">
+                                  <div className="w-12 h-12 rounded-lg overflow-hidden border border-white/10 bg-white/5 shrink-0">
                                     <img src={scan.imageUrl} alt="" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
                                   </div>
                                   <div>
-                                    <div className="font-bold text-gray-900 leading-tight">{scan.productTitle}</div>
-                                    <div className="text-[10px] text-gray-400 mt-0.5">
+                                    <div className="font-bold text-white leading-tight">{scan.productTitle}</div>
+                                    <div className="text-[10px] text-gray-500 mt-0.5">
                                       {new Date(scan.timestamp).toLocaleString()}
                                     </div>
                                   </div>
                                 </td>
-                                <td className="p-4 font-space font-bold text-gray-700">
+                                <td className="p-4 font-space font-bold text-gray-300">
                                   {scan.marketplace}
                                 </td>
                                 <td className="p-4">
                                   <span className={`px-2.5 py-1 rounded text-[10px] font-mono font-bold border ${
                                     scan.verdict === "BLOCK_LISTING"
-                                      ? "bg-red-50 border-red-200 text-red-600"
+                                      ? "bg-red-500/10 border-red-500/30 text-red-400"
                                       : scan.verdict === "MANUAL_REVIEW"
-                                      ? "bg-amber-50 border-amber-200 text-amber-600"
-                                      : "bg-green-50 border-green-200 text-green-600"
+                                      ? "bg-amber-500/10 border-amber-500/30 text-amber-400"
+                                      : "bg-green-500/10 border-green-500/30 text-green-400"
                                   }`}>
                                     {scan.verdict}
                                   </span>
                                 </td>
-                                <td className="p-4 font-mono font-extrabold text-[#2323ff]">
+                                <td className="p-4 font-mono font-extrabold text-[#2cff05]">
                                   {scan.riskScore}%
                                 </td>
                                 <td className="p-4">
@@ -891,13 +896,13 @@ export default function App() {
                                         setCurrentScanResult(scan);
                                         navigateTo("scanner");
                                       }}
-                                      className="bg-brand-blue/10 text-[#2323ff] px-2.5 py-1.5 rounded-lg text-xs font-space font-bold cursor-pointer hover:bg-brand-blue/20"
+                                      className="bg-[#2323ff]/20 text-[#2323ff] px-2.5 py-1.5 rounded-lg text-xs font-space font-bold cursor-pointer hover:bg-[#2323ff]/30"
                                     >
                                       View Report
                                     </button>
                                     <button
                                       onClick={() => setDeleteConfirmScanId(scan.scanId)}
-                                      className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-gray-100 cursor-pointer"
+                                      className="p-1.5 text-gray-600 hover:text-red-400 rounded-lg hover:bg-white/5 cursor-pointer"
                                       title="Purge scan"
                                     >
                                       <Trash2 className="w-4 h-4" />
@@ -917,132 +922,300 @@ export default function App() {
 
             {/* VIEW 4: USER CONTROL DASHBOARD */}
             {view === "dashboard" && (
-              <div className="max-w-5xl mx-auto px-4 py-12 space-y-8">
-                <div className="border-b border-gray-200 pb-5">
-                  <h1 className="text-2xl md:text-4xl font-space font-extrabold text-gray-900">
-                    User Control Center
-                  </h1>
-                  <p className="text-sm text-gray-500">
-                    Manage store safety credentials, billing portals, and platform integrations.
-                  </p>
-                </div>
+              <div className="min-h-screen bg-[#0a0a0a] text-white">
+                <div className="max-w-5xl mx-auto px-4 py-10 space-y-8">
 
-                {user && (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    
-                    {/* LEFT PANEL: ACCOUNT OVERVIEW */}
-                    <div className="space-y-6">
-                      
-                      <div className="p-6 bg-white border border-gray-150 rounded-2xl shadow-sm space-y-4 text-center">
-                        <div className="w-16 h-16 bg-[#2323ff] text-white font-space font-bold text-2xl flex items-center justify-center rounded-3xl mx-auto">
-                          {user.displayName[0].toUpperCase()}
-                        </div>
-                        <div>
-                          <h3 className="font-space font-black text-gray-900 text-lg leading-tight">
-                            {user.displayName}
-                          </h3>
-                          <p className="text-xs text-gray-400 mt-0.5">{user.email}</p>
-                        </div>
+                  {/* Page heading */}
+                  <div className="border-b border-white/10 pb-5">
+                    <h1 className="text-2xl md:text-4xl font-space font-extrabold text-white">
+                      User Dashboard
+                    </h1>
+                    <p className="text-sm text-gray-400 mt-1">
+                      Manage store safety credentials, billing portals, and platform integrations.
+                    </p>
+                  </div>
 
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold bg-[#121226] text-[#2cff05] rounded-full border border-brand-green/30">
-                          <Zap className="w-3.5 h-3.5" />
-                          {user.plan.toUpperCase()} LICENSE
-                        </div>
-
-                        <div className="border-t border-gray-100 pt-4 text-left space-y-3 text-xs font-sans">
-                          <div className="flex justify-between">
-                            <span className="text-gray-400">Linked Account Since:</span>
-                            <span className="font-bold text-gray-800">{new Date(user.createdAt).toLocaleDateString()}</span>
+                  {user && (
+                    <>
+                      {/* STATUS BANNER */}
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 bg-[#111111] border border-white/10 rounded-2xl">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-xl bg-[#2323ff]/20 border border-[#2323ff]/30 flex items-center justify-center shrink-0">
+                            <ShieldCheck className="w-5 h-5 text-[#2323ff]" />
                           </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-400">Admin Clearance:</span>
-                            <span className="font-bold text-gray-800">{user.role.toUpperCase()}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-400">Monthly Billing:</span>
-                            <span className="text-green-600 font-bold">{user.paymentStatus === "active" ? "✓ active" : "none"}</span>
+                          <div>
+                            <p className="font-space font-extrabold text-white text-sm uppercase tracking-wide">
+                              {user.plan === "free" ? "FREE LICENSE — Limited Protection" : `${user.plan.toUpperCase()} LICENSE — Active`}
+                            </p>
+                            <p className="text-xs text-gray-400 mt-0.5 font-sans">
+                              {user.plan === "free"
+                                ? `${user.scansUsed} of ${user.scansLimit} scans used this month. Upgrade for full coverage.`
+                                : `Billing ${user.paymentStatus === "active" ? "active" : "inactive"} · ${user.scansUsed} of ${user.scansLimit === -1 ? "2,500" : user.scansLimit} scans used`}
+                            </p>
                           </div>
                         </div>
-                      </div>
-
-                      {user.plan === "free" && (
-                        <div className="p-6 bg-[#121226] border border-brand-green/20 rounded-2xl text-white space-y-4">
-                          <h4 className="font-space font-extrabold text-[#2cff05] text-sm">UPGRADE REQUIRED FOR ULTIMATE DEFENSE</h4>
-                          <p className="text-xs text-gray-300 font-sans leading-relaxed">
-                            Pro licensees obtain Laplacian blur forensics, 100 scans, and prioritization queues. Prevent immediate suspensions.
-                          </p>
+                        {user.plan === "free" ? (
                           <button
-                            onClick={() => handleStripeCheckout("pro")}
-                            className="w-full py-3 bg-[#2323ff] hover:bg-blue-700 text-white hover:text-white text-xs font-space font-extrabold rounded-xl text-center shadow-md cursor-pointer glow-hover"
+                            onClick={() => setShowPricingModal(true)}
+                            className="shrink-0 px-5 py-2.5 bg-[#2323ff] hover:bg-blue-700 text-white text-xs font-space font-extrabold rounded-xl cursor-pointer transition-colors"
                           >
-                            Upgrade is Pro Plan (Save Store) →
+                            View Plans & Upgrade →
                           </button>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* RIGHT PANEL: USAGE AND CONFIG */}
-                    <div className="md:col-span-2 space-y-6">
-                      
-                      {/* Interactive Usage Statistics Credits */}
-                      <div className="p-6 bg-white border border-gray-150 rounded-2xl shadow-sm space-y-6">
-                        <div className="flex justify-between items-center bg-gray-50 p-4 -mx-6 -mt-6 border-b border-gray-150 rounded-t-2xl">
-                          <h3 className="font-space font-bold text-gray-800 text-base flex items-center gap-2">
-                            <BarChart3 className="w-5 h-5 text-[#2323ff]" />
-                            IP Check Usage Metrics
-                          </h3>
-                        </div>
-
-                        <div className="space-y-3">
-                          <div className="flex justify-between text-xs font-mono font-bold">
-                            <span className="text-gray-500">Monthly Quota used</span>
-                            <span className="text-gray-950">
-                              {user.scansUsed} / {user.scansLimit === -1 ? "2,500" : `${user.scansLimit}`} Scans Used
-                            </span>
-                          </div>
-
-                          <div className="w-full h-4 bg-gray-100 rounded-full overflow-hidden border border-gray-150">
-                            <div 
-                              className="h-full bg-gradient-to-r from-[#2323ff] to-cyan-500 rounded-full transition-all duration-700"
-                              style={{ 
-                                width: `${
-                                  user.scansLimit === -1 
-                                    ? Math.max(Math.min((user.scansUsed / 2500) * 100, 100), 2)
-                                    : Math.max(Math.min((user.scansUsed / user.scansLimit) * 100, 100), 2)
-                                }%` 
-                              }}
-                            ></div>
-                          </div>
-
-                          <p className="text-[11px] text-gray-400 font-sans leading-relaxed">
-                            Your monthly scan quota resets on the anniversary of your licensing. Keep credits loaded to ensure post-publication safety scans stay active.
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Billing Manager & Stripe portal simulation */}
-                      <div className="p-6 bg-white border border-gray-150 rounded-2xl shadow-sm space-y-4">
-                        <h4 className="font-space font-bold text-gray-800 text-base">
-                          Manage Account Billing & Webhooks
-                        </h4>
-                        <p className="text-xs text-gray-500 leading-relaxed font-sans">
-                          MUMY utilizes standard Stripe portals. Provision new subscription details or edit credit cards in absolute security.
-                        </p>
-                        
-                        <div className="flex flex-wrap gap-3">
+                        ) : (
                           <button
                             onClick={handleStripePortal}
-                            className="bg-gray-50 border border-gray-200 hover:bg-gray-100 text-gray-800 px-4 py-2.5 rounded-xl text-xs font-space font-extrabold cursor-pointer inline-flex items-center gap-1.5"
+                            className="shrink-0 px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-space font-extrabold rounded-xl cursor-pointer transition-colors inline-flex items-center gap-1.5"
                           >
-                            <CreditCard className="w-4 h-4" /> Manage Subscriptions
+                            <CreditCard className="w-3.5 h-3.5" /> Manage Billing
                           </button>
-                        </div>
+                        )}
                       </div>
 
-                    </div>
+                      {/* MAIN GRID */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                  </div>
-                )}
+                        {/* LEFT: ACCOUNT PROFILE */}
+                        <div className="space-y-5">
+                          <div className="p-6 bg-[#111111] border border-white/10 rounded-2xl space-y-5 text-center">
+                            <div className="w-16 h-16 bg-[#2323ff] text-white font-space font-bold text-2xl flex items-center justify-center rounded-2xl mx-auto">
+                              {user.displayName[0].toUpperCase()}
+                            </div>
+                            <div>
+                              <h3 className="font-space font-black text-white text-lg leading-tight">
+                                {user.displayName}
+                              </h3>
+                              <p className="text-xs text-gray-500 mt-0.5">{user.email}</p>
+                            </div>
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold bg-[#2cff05]/10 text-[#2cff05] rounded-full border border-[#2cff05]/20">
+                              <Zap className="w-3 h-3" />
+                              {user.plan.toUpperCase()} LICENSE
+                            </div>
+                            <div className="border-t border-white/10 pt-4 text-left space-y-3 text-xs font-sans">
+                              <div className="flex justify-between">
+                                <span className="text-gray-500">Member since</span>
+                                <span className="font-bold text-gray-200">{new Date(user.createdAt).toLocaleDateString()}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-500">Role</span>
+                                <span className="font-bold text-gray-200">{user.role.toUpperCase()}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-500">Billing</span>
+                                <span className={`font-bold ${user.paymentStatus === "active" ? "text-[#2cff05]" : "text-gray-500"}`}>
+                                  {user.paymentStatus === "active" ? "✓ active" : "none"}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Quick actions */}
+                          <div className="p-5 bg-[#111111] border border-white/10 rounded-2xl space-y-2">
+                            <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-3">Quick Actions</p>
+                            <button
+                              onClick={() => navigateTo("scanner")}
+                              className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-space font-bold text-gray-300 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
+                            >
+                              <Search className="w-4 h-4 text-[#2323ff]" /> New IP Scan
+                            </button>
+                            <button
+                              onClick={() => navigateTo("history")}
+                              className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-space font-bold text-gray-300 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
+                            >
+                              <Database className="w-4 h-4 text-[#2323ff]" /> Scan History
+                            </button>
+                            <button
+                              onClick={handleStripePortal}
+                              className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-space font-bold text-gray-300 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
+                            >
+                              <CreditCard className="w-4 h-4 text-[#2323ff]" /> Billing Portal
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* RIGHT: USAGE + BILLING */}
+                        <div className="md:col-span-2 space-y-5">
+
+                          {/* Usage metrics */}
+                          <div className="p-6 bg-[#111111] border border-white/10 rounded-2xl space-y-5">
+                            <div className="flex items-center justify-between">
+                              <h3 className="font-space font-bold text-white text-sm flex items-center gap-2">
+                                <BarChart3 className="w-4 h-4 text-[#2323ff]" />
+                                IP Check Usage Metrics
+                              </h3>
+                              <span className="text-[10px] font-mono text-gray-500 uppercase">Monthly</span>
+                            </div>
+
+                            {/* Big number stat */}
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="p-4 bg-white/5 rounded-xl text-center">
+                                <div className="text-2xl font-space font-extrabold text-white">{user.scansUsed}</div>
+                                <div className="text-[10px] text-gray-500 font-mono mt-1 uppercase">Scans Used</div>
+                              </div>
+                              <div className="p-4 bg-white/5 rounded-xl text-center">
+                                <div className="text-2xl font-space font-extrabold text-white">
+                                  {user.scansLimit === -1 ? "2,500" : user.scansLimit - user.scansUsed}
+                                </div>
+                                <div className="text-[10px] text-gray-500 font-mono mt-1 uppercase">Remaining</div>
+                              </div>
+                              <div className="p-4 bg-white/5 rounded-xl text-center">
+                                <div className="text-2xl font-space font-extrabold text-white">
+                                  {user.scansLimit === -1 ? "∞" : user.scansLimit}
+                                </div>
+                                <div className="text-[10px] text-gray-500 font-mono mt-1 uppercase">Monthly Cap</div>
+                              </div>
+                            </div>
+
+                            {/* Progress bar */}
+                            <div className="space-y-2">
+                              <div className="flex justify-between text-[11px] font-mono text-gray-500">
+                                <span>Quota consumed</span>
+                                <span className="text-gray-300">
+                                  {user.scansLimit === -1
+                                    ? `${Math.round((user.scansUsed / 2500) * 100)}%`
+                                    : `${Math.round((user.scansUsed / user.scansLimit) * 100)}%`}
+                                </span>
+                              </div>
+                              <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden border border-white/10">
+                                <div
+                                  className="h-full bg-gradient-to-r from-[#2323ff] to-cyan-400 rounded-full transition-all duration-700"
+                                  style={{
+                                    width: `${
+                                      user.scansLimit === -1
+                                        ? Math.max(Math.min((user.scansUsed / 2500) * 100, 100), 2)
+                                        : Math.max(Math.min((user.scansUsed / user.scansLimit) * 100, 100), 2)
+                                    }%`
+                                  }}
+                                />
+                              </div>
+                              <p className="text-[10px] text-gray-600 font-sans">
+                                Quota resets on the anniversary of your license activation.
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Billing manager */}
+                          <div className="p-6 bg-[#111111] border border-white/10 rounded-2xl space-y-4">
+                            <h4 className="font-space font-bold text-white text-sm flex items-center gap-2">
+                              <CreditCard className="w-4 h-4 text-[#2323ff]" />
+                              Billing & Subscription
+                            </h4>
+                            <div className="grid grid-cols-2 gap-3 text-xs font-sans">
+                              <div className="p-3 bg-white/5 rounded-xl space-y-1">
+                                <p className="text-gray-500 text-[10px] font-mono uppercase">Current Plan</p>
+                                <p className="text-white font-bold">{user.plan.charAt(0).toUpperCase() + user.plan.slice(1)}</p>
+                              </div>
+                              <div className="p-3 bg-white/5 rounded-xl space-y-1">
+                                <p className="text-gray-500 text-[10px] font-mono uppercase">Status</p>
+                                <p className={`font-bold ${user.paymentStatus === "active" ? "text-[#2cff05]" : "text-gray-400"}`}>
+                                  {user.paymentStatus === "active" ? "Active" : "Inactive"}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex flex-wrap gap-3 pt-1">
+                              <button
+                                onClick={handleStripePortal}
+                                className="bg-white/5 border border-white/10 hover:bg-white/10 text-white px-4 py-2.5 rounded-xl text-xs font-space font-extrabold cursor-pointer inline-flex items-center gap-1.5 transition-colors"
+                              >
+                                <CreditCard className="w-3.5 h-3.5" /> Manage Subscriptions
+                              </button>
+                              {user.plan === "free" && (
+                                <button
+                                  onClick={() => setShowPricingModal(true)}
+                                  className="bg-[#2323ff] hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-space font-extrabold cursor-pointer inline-flex items-center gap-1.5 transition-colors"
+                                >
+                                  <Zap className="w-3.5 h-3.5" /> Upgrade Plan
+                                </button>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* ── AFFILIATE PROGRAM CARD ── */}
+                          {user.referralCode && (
+                            <div className="p-6 bg-[#111111] border border-[#2cff05]/20 rounded-2xl space-y-5">
+                              {/* Header */}
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h4 className="font-space font-bold text-white text-sm flex items-center gap-2">
+                                    <Sparkles className="w-4 h-4 text-[#2cff05]" />
+                                    Affiliate Program
+                                  </h4>
+                                  <p className="text-[11px] text-gray-500 mt-0.5">Earn $5 per Pro referral · $15 per Agency referral</p>
+                                </div>
+                                <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-[#2cff05]/10 text-[#2cff05] border border-[#2cff05]/20">
+                                  ACTIVE
+                                </span>
+                              </div>
+
+                              {/* Stats row */}
+                              <div className="grid grid-cols-3 gap-3">
+                                <div className="p-3 bg-white/5 rounded-xl text-center">
+                                  <div className="text-xl font-space font-extrabold text-white">{user.referralCount ?? 0}</div>
+                                  <div className="text-[10px] text-gray-500 font-mono mt-0.5 uppercase">Referrals</div>
+                                </div>
+                                <div className="p-3 bg-white/5 rounded-xl text-center">
+                                  <div className="text-xl font-space font-extrabold text-[#2cff05]">${(user.affiliateEarnings ?? 0).toFixed(2)}</div>
+                                  <div className="text-[10px] text-gray-500 font-mono mt-0.5 uppercase">Earned</div>
+                                </div>
+                                <div className="p-3 bg-white/5 rounded-xl text-center">
+                                  <div className="text-xl font-space font-extrabold text-white">20%</div>
+                                  <div className="text-[10px] text-gray-500 font-mono mt-0.5 uppercase">Commission</div>
+                                </div>
+                              </div>
+
+                              {/* Referral link */}
+                              {(() => {
+                                const refLink = window.location.origin + "?ref=" + user.referralCode;
+                                return (
+                                  <div className="space-y-2">
+                                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Your referral link</p>
+                                    <div className="flex items-center gap-2">
+                                      <div className="flex-1 px-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs font-mono text-gray-300 truncate select-all">
+                                        {refLink}
+                                      </div>
+                                      <button
+                                        onClick={() => navigator.clipboard.writeText(refLink)}
+                                        className="shrink-0 px-3 py-2.5 bg-[#2cff05]/10 hover:bg-[#2cff05]/20 border border-[#2cff05]/20 text-[#2cff05] text-xs font-space font-extrabold rounded-xl cursor-pointer transition-colors"
+                                      >
+                                        Copy
+                                      </button>
+                                    </div>
+                                  </div>
+                                );
+                              })()}
+
+                              {/* Share row */}
+                              {(() => {
+                                const refLink = window.location.origin + "?ref=" + user.referralCode;
+                                const tweetUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComponent("I use MUMY to protect my store from IP bans 🛡️ Try it free: " + refLink);
+                                const mailUrl  = "mailto:?subject=" + encodeURIComponent("Protect your Etsy store") + "&body=" + encodeURIComponent("Hey, I've been using MUMY to keep my store safe from IP bans. Try it here: " + refLink);
+                                return (
+                                  <div className="flex items-center gap-2 pt-1">
+                                    <p className="text-[10px] font-mono text-gray-600 uppercase">Share:</p>
+                                    <a
+                                      href={tweetUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white text-[10px] font-mono rounded-lg transition-colors"
+                                    >
+                                      X Twitter
+                                    </a>
+                                    <a
+                                      href={mailUrl}
+                                      className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white text-[10px] font-mono rounded-lg transition-colors"
+                                    >
+                                      Email
+                                    </a>
+                                  </div>
+                                );
+                              })()}
+                            </div>
+                          )}
+
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             )}
 
@@ -1061,13 +1234,13 @@ export default function App() {
             {/* VIEW 5b: ADMIN DASHBOARD */}
             {view === "admin" && user?.role === "admin" && (
               <div className="max-w-7xl mx-auto px-4 py-12 space-y-8">
-                <div className="border-b border-gray-200 pb-5 flex items-center justify-between">
+                <div className="border-b border-white/10 pb-5 flex items-center justify-between">
                   <div>
-                    <h1 className="text-2xl md:text-3xl font-space font-extrabold text-gray-900 flex items-center gap-2">
-                      <Shield className="w-7 h-7 text-red-500 shrink-0" /> Admin Console
+                    <h1 className="text-2xl md:text-3xl font-space font-extrabold text-white flex items-center gap-2">
+                      <Shield className="w-7 h-7 text-red-400 shrink-0" /> Admin Console
                     </h1>
-                    <p className="text-xs text-gray-400 mt-1 font-mono">
-                      Logged in as <span className="text-red-500 font-bold">{user.email}</span> · Administrator
+                    <p className="text-xs text-gray-500 mt-1 font-mono">
+                      Logged in as <span className="text-red-400 font-bold">{user.email}</span> · Administrator
                     </p>
                   </div>
                 </div>
@@ -1086,7 +1259,7 @@ export default function App() {
                     loading={adminLoading}
                   />
                 ) : (
-                  <div className="text-center text-gray-400 text-xs py-12">Failed to load dashboard data.</div>
+                  <div className="text-center text-gray-500 text-xs py-12">Failed to load dashboard data.</div>
                 )}
               </div>
             )}
@@ -1125,7 +1298,12 @@ export default function App() {
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-blue/20 w-48 h-48 rounded-full blur-[60px] pointer-events-none"></div>
 
                   <div className="text-center space-y-2 relative z-10">
-                    <LogoIcon className="w-12 h-12 mx-auto mb-2" />
+                        <img
+                        src="/icon.png"
+                        alt="MUMY IP Guard"
+                        className={`w-12 h-12 mx-auto mb-2 object-contain shrink-0`}
+                        draggable={false}
+                      />
                     <h2 className="text-2xl font-space font-extrabold text-white">
                       {isSignUp ? "Create Admin Credentials" : "Sign In to Store Protection"}
                     </h2>
@@ -1189,17 +1367,23 @@ export default function App() {
                   <div className="space-y-3 relative z-10">
                     <div className="flex items-center gap-2 text-xs text-gray-500 font-mono">
                       <div className="h-[1px] bg-white/10 flex-1"></div>
-                      <span>OR SECURE OAUTH</span>
+                      <span>or</span>
                       <div className="h-[1px] bg-white/10 flex-1"></div>
                     </div>
 
                     <button
                       type="button"
                       onClick={triggerGoogleLogin}
-                      className="w-full bg-white text-gray-900 hover:bg-gray-50 font-space font-bold py-3 px-4 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-sm transition-colors border border-gray-200"
+                      className="w-full bg-white hover:bg-gray-50 active:bg-gray-100 text-[#3c4043] font-medium py-2.5 px-4 rounded-lg text-sm flex items-center justify-center gap-3 cursor-pointer shadow-sm transition-colors border border-[#dadce0] hover:border-[#c6c6c6]"
+                      style={{ fontFamily: "'Google Sans', Roboto, sans-serif" }}
                     >
-                      <img src="https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=40&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" alt="" className="w-5 h-5 rounded-full" />
-                      Sign in instantly with Google ID
+                      <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+                        <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
+                        <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+                        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+                      </svg>
+                      Sign in with Google
                     </button>
                   </div>
 
@@ -1308,24 +1492,58 @@ export default function App() {
 
       </main>
 
+      {/* Pricing / Upgrade Plan Modal */}
+      {showPricingModal && (
+        <div
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+          onClick={() => setShowPricingModal(false)}
+        >
+          <div
+            className="bg-[#0d0d1a] border border-white/10 rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl"
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
+          >
+            {/* Modal header */}
+            <div className="flex items-center justify-between p-6 border-b border-white/10">
+              <div>
+                <h2 className="font-space font-extrabold text-white text-lg">Choose Your Plan</h2>
+                <p className="text-xs text-gray-400 mt-0.5 font-sans">Upgrade anytime. Cancel anytime.</p>
+              </div>
+              <button
+                onClick={() => setShowPricingModal(false)}
+                className="text-gray-400 hover:text-white text-2xl leading-none cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10"
+              >
+                ×
+              </button>
+            </div>
+            {/* Reuse existing PricingSection */}
+            <div className="[&>section]:py-10 [&>section]:border-none">
+              <PricingSection onSelectPlan={(plan, cycle) => {
+                setShowPricingModal(false);
+                handleStripeCheckout(plan, cycle);
+              }} />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Delete Confirmation Alert Dialog popup */}
       {deleteConfirmScanId && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-white border rounded-2xl p-6 max-w-sm w-full space-y-4">
-            <h4 className="font-space font-extrabold text-[#0a0a0a] text-lg">Purge Analyzed Run?</h4>
-            <p className="text-xs text-gray-500 leading-relaxed font-sans">
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
+          <div className="bg-[#111111] border border-white/10 rounded-2xl p-6 max-w-sm w-full space-y-4">
+            <h4 className="font-space font-extrabold text-white text-lg">Purge Analyzed Run?</h4>
+            <p className="text-xs text-gray-400 leading-relaxed font-sans">
               Purging is irreversible. This will delete the scan record completely from the historical logs dashboard.
             </p>
             <div className="flex gap-2.5 justify-end">
               <button
                 onClick={() => setDeleteConfirmScanId(null)}
-                className="px-4 py-2 bg-gray-50 text-gray-700 text-xs font-space font-bold rounded-xl border border-gray-150 cursor-pointer"
+                className="px-4 py-2 bg-white/5 text-gray-300 text-xs font-space font-bold rounded-xl border border-white/10 cursor-pointer hover:bg-white/10"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleDeleteScan(deleteConfirmScanId)}
-                className="px-4 py-2 bg-red-500 text-white text-xs font-space font-bold rounded-xl hover:bg-red-600 cursor-pointer shadow-xs"
+                className="px-4 py-2 bg-red-500/80 text-white text-xs font-space font-bold rounded-xl hover:bg-red-500 cursor-pointer"
               >
                 Delete Log
               </button>
@@ -1336,11 +1554,11 @@ export default function App() {
 
       {/* Persistent mini-footer for app screens to carry legal agreements */}
       {!isMarketingContext && (
-        <footer className="py-6 border-t border-gray-150 bg-white text-center text-xs text-gray-400 font-sans mt-auto">
-          <div className="flex justify-center gap-4 text-brand-blue font-semibold font-mono mb-1.5">
-            <button onClick={() => navigateTo("privacy")} className="hover:underline cursor-pointer">Privacy Guidelines</button>
-            <span>•</span>
-            <button onClick={() => navigateTo("terms")} className="hover:underline cursor-pointer">Terms of Service</button>
+        <footer className="py-6 border-t border-white/10 bg-[#0a0a0a] text-center text-xs text-gray-600 font-sans mt-auto">
+          <div className="flex justify-center gap-4 text-gray-400 font-semibold font-mono mb-1.5">
+            <button onClick={() => navigateTo("privacy")} className="hover:text-white hover:underline cursor-pointer transition-colors">Privacy Guidelines</button>
+            <span>·</span>
+            <button onClick={() => navigateTo("terms")} className="hover:text-white hover:underline cursor-pointer transition-colors">Terms of Service</button>
           </div>
           <div>MUMY IP Guard © {new Date().getFullYear()}. All pre-publication audits secured.</div>
         </footer>

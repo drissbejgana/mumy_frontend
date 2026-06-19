@@ -10,6 +10,11 @@ export interface UserProfile {
   scansLimit: number; // 3, 100, -1 (unlimited)
   createdAt: string;
   paymentStatus: "active" | "payment_failed" | null;
+  // Affiliate
+  referralCode?: string;
+  referredBy?: string | null;
+  referralCount?: number;
+  affiliateEarnings?: number;
 }
 
 export type VerdictType = "BLOCK_LISTING" | "MANUAL_REVIEW" | "SAFE_TO_PUBLISH";
