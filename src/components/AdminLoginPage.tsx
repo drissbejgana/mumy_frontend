@@ -61,7 +61,7 @@ export default function AdminLoginPage({ onSuccess, onBack }: Props) {
               Admin Access
             </h1>
             <p className="text-xs text-gray-500 mt-1 font-mono">
-              MUMY IP Guard · Restricted Area
+              MUMY · Restricted Area
             </p>
           </div>
         </div>

@@ -14,7 +14,7 @@ export function PrivacyPolicyView() {
       </div>
 
       <p className="text-sm">
-        Welcome to MUMY IP Guard ("we", "our", or "us"). We are committed to protecting your privacy and security. This Privacy Policy outlines how your personal data is collected, processed, and safeguarded when using our e-commerce pre-publication compliance platform.
+        Welcome to MUMY ("we", "our", or "us"). We are committed to protecting your privacy and security. This Privacy Policy outlines how your personal data is collected, processed, and safeguarded when using our e-commerce pre-publication compliance platform.
       </p>
 
       <section className="space-y-2.5">
@@ -67,7 +67,7 @@ export function TermsOfServiceView() {
       </div>
 
       <p className="text-sm">
-        By registering, accessing, or subscribing to MUMY IP Guard (comprising server scanners, dashboard tracking logs, and analytical reports), you assent completely to these Terms of Service.
+        By registering, accessing, or subscribing to MUMY (comprising server scanners, dashboard tracking logs, and analytical reports), you assent completely to these Terms of Service.
       </p>
 
       <section className="space-y-2.5">

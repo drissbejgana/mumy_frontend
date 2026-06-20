@@ -13,7 +13,7 @@ export default defineConfig(() => {
         registerType: 'autoUpdate',
         includeAssets: ['favicon.ico', 'icon.png'],
         manifest: {
-          name: 'MUMY IP Guard',
+          name: 'MUMY',
           short_name: 'MUMY',
           description: 'Pre-publication IP compliance forensics for marketplace sellers.',
           theme_color: '#0a0a0a',

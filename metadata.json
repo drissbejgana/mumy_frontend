@@ -1,5 +1,5 @@
 {
-  "name": "MUMY IP Guard",
+  "name": "MUMY",
   "description": "Pre-publication Intellectual Property risk scanner for Etsy, Redbubble, and Amazon Merch sellers. Protect your accounts using 5 parallel AI agents.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

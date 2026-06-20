@@ -174,7 +174,7 @@ export function PWAInstallBanner() {
                 <div className="flex-1">
                   <p className="text-white text-sm font-semibold">Tap "Add" to confirm</p>
                   <p className="text-slate-400 text-xs mt-1 leading-relaxed">
-                    MUMY IP Guard will appear on your home screen like a native app.
+                    MUMY will appear on your home screen like a native app.
                   </p>
                 </div>
               </div>

@@ -8,7 +8,7 @@ interface FAQItem {
 
 const FAQ_ITEMS: FAQItem[] = [
   {
-    q: "What IP violations does MUMY IP Guard detect?",
+    q: "What IP violations does MUMY detect?",
     a: "MUMY evaluates listings across 5 visual & text layers, cross-matching trademark indicators, protected copyright images, character visual traits (e.g., Disney/Pokemon characters), DMCA terms, and known bypass synonyms. We match over 30+ top commercial brands and 25+ iconic characters."
   },
   {
@@ -25,7 +25,7 @@ const FAQ_ITEMS: FAQItem[] = [
   },
   {
     q: "How accurate is the detection?",
-    a: "MUMY IP Guard maintains a 98.7% verified accuracy rate. By fusing results from advanced visual classifiers, deep web index correlation, pixel forensics, and fuzzy phonetic NLP algorithms, we eliminate false negatives and catch evasions prior to publishing."
+    a: "MUMY maintains a 98.7% verified accuracy rate. By fusing results from advanced visual classifiers, deep web index correlation, pixel forensics, and fuzzy phonetic NLP algorithms, we eliminate false negatives and catch evasions prior to publishing."
   },
   {
     q: "What happens after a scan?",

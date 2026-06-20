@@ -113,7 +113,7 @@ export function Hero({ onStartScan }: { onStartScan: () => void }) {
             <div className="relative pt-[56.25%] w-full bg-black">
               <iframe 
                 className="absolute inset-0 w-full h-full"
-                src="https://www.youtube.com/embed/UwGwrg8a-1A?autoplay=1"
+                src="https://www.youtube.com/embed/KIe_2EaMCsQ?autoplay=1"
                 title="MUMY Compliance Scan Walkthrough Video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
@@ -625,7 +625,7 @@ export function Footer({ onNavigate }: { onNavigate: (path: string) => void }) {
         <div className="space-y-4">
           <LogoIcon className="w-20 h-12" />
           <p className="text-xs text-gray-400 leading-relaxed font-sans">
-            MUMY IP Guard is dedicated to protecting modern e-commerce creators from devastating brand copyright and trademark suspensions before they publish.
+            MUMY is dedicated to protecting modern e-commerce creators from devastating brand copyright and trademark suspensions before they publish.
           </p>
           <div className="text-[10px] text-gray-500 font-mono">
             © {new Date().getFullYear()} MUMY. All rights reserved.

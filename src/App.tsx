@@ -1130,7 +1130,52 @@ export default function App() {
                           </div>
 
                           {/* ── AFFILIATE PROGRAM CARD ── */}
-                          {user.referralCode && (
+                          {!user.referralCode ? (
+                            /* ── JOIN CTA ── */
+                            <div className="p-6 bg-[#111111] border border-white/10 rounded-2xl space-y-4">
+                              <div className="flex items-start gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-[#2cff05]/10 border border-[#2cff05]/20 flex items-center justify-center shrink-0">
+                                  <Sparkles className="w-5 h-5 text-[#2cff05]" />
+                                </div>
+                                <div>
+                                  <h4 className="font-space font-bold text-white text-sm">Become an Affiliate</h4>
+                                  <p className="text-xs text-gray-500 mt-0.5 font-sans leading-relaxed">
+                                    Earn <span className="text-[#2cff05] font-bold">$5 per Pro</span> and <span className="text-[#2cff05] font-bold">$15 per Agency</span> referral. Share your unique link, get paid automatically when friends upgrade.
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="grid grid-cols-3 gap-3 text-center text-[10px] font-mono text-gray-500">
+                                <div className="p-3 bg-white/5 rounded-xl space-y-1">
+                                  <div className="text-base font-space font-extrabold text-white">$5</div>
+                                  <div className="uppercase">Pro plan</div>
+                                </div>
+                                <div className="p-3 bg-white/5 rounded-xl space-y-1">
+                                  <div className="text-base font-space font-extrabold text-white">$15</div>
+                                  <div className="uppercase">Agency plan</div>
+                                </div>
+                                <div className="p-3 bg-white/5 rounded-xl space-y-1">
+                                  <div className="text-base font-space font-extrabold text-[#2cff05]">∞</div>
+                                  <div className="uppercase">No cap</div>
+                                </div>
+                              </div>
+                              <button
+                                onClick={async () => {
+                                  try {
+                                    const res = await apiFetch("/api/affiliate/join", { method: "POST" });
+                                    const data = await res.json();
+                                    if (data.referralCode) {
+                                      const updated = { ...user, referralCode: data.referralCode, referralCount: 0, affiliateEarnings: 0 };
+                                      setUser(updated);
+                                      localStorage.setItem("mumy_user", JSON.stringify(updated));
+                                    }
+                                  } catch {}
+                                }}
+                                className="w-full py-3 bg-[#2cff05] hover:bg-green-400 text-gray-900 font-space font-extrabold text-sm rounded-xl cursor-pointer transition-colors"
+                              >
+                                Join Affiliate Program →
+                              </button>
+                            </div>
+                          ) : (
                             <div className="p-6 bg-[#111111] border border-[#2cff05]/20 rounded-2xl space-y-5">
                               {/* Header */}
                               <div className="flex items-center justify-between">
@@ -1300,7 +1345,7 @@ export default function App() {
                   <div className="text-center space-y-2 relative z-10">
                         <img
                         src="/icon.png"
-                        alt="MUMY IP Guard"
+                        alt="MUMY"
                         className={`w-12 h-12 mx-auto mb-2 object-contain shrink-0`}
                         draggable={false}
                       />
@@ -1560,7 +1605,7 @@ export default function App() {
             <span>·</span>
             <button onClick={() => navigateTo("terms")} className="hover:text-white hover:underline cursor-pointer transition-colors">Terms of Service</button>
           </div>
-          <div>MUMY IP Guard © {new Date().getFullYear()}. All pre-publication audits secured.</div>
+          <div>MUMY © {new Date().getFullYear()}. All pre-publication audits secured.</div>
         </footer>
       )}
 
