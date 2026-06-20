@@ -156,18 +156,31 @@ export function FeaturedOnSection() {
           As featured on
         </p>
         <div className="flex flex-wrap items-center justify-center gap-10">
+          <a
+          href="https://www.indiehackers.com/post/inside-the-hidden-crisis-of-marketplace-sellers-how-mumy-is-redefining-brand-protection-UHxubMs4j88oFtfJmtEf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="h-7 opacity-50 hover:opacity-90 transition-opacity duration-300 object-contain"
+        >
           <img
             src="/logo-indiehackers.webp"
             alt="Indie Hackers"
             className="h-7 opacity-50 hover:opacity-90 transition-opacity duration-300 object-contain"
             draggable={false}
           />
-          <img
-            src="/logo-wefunders.webp"
-            alt="Wefunder"
-            className="h-7 opacity-50 hover:opacity-90 transition-opacity duration-300 object-contain"
-            draggable={false}
-          />
+        </a>
+        <a
+          href="https://wefunder.com/feed/340432-going-global-getting-burned-why-expanding-sellers-keep-walking-into-trademark"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="h-7 opacity-50 hover:opacity-90 transition-opacity duration-300 object-contain"
+        >
+        <img
+          src="/logo-wefunders.webp"
+          alt="Wefunder"
+          className="h-full w-full object-contain"
+        />
+      </a>
         </div>
       </div>
     </section>
