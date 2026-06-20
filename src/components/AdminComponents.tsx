@@ -3,7 +3,7 @@ import {
   Users, TrendingUp, DollarSign, Database, Search,
   Mail, Trash2, Ban, Activity, BarChart3,
   Shield, UserCheck, AlertTriangle, CheckCircle2,
-  Settings, Crown, RefreshCw, ChevronDown
+  Settings, Crown, RefreshCw, ChevronDown, UserPlus, X, Pencil
 } from "lucide-react";
 import { apiFetch } from "../api";
 import { UserProfile, ScanResult } from "../types";
@@ -304,9 +304,115 @@ function OverviewTab({ stats }: { stats: AdminStats }) {
 
 // ─── Users Tab ────────────────────────────────────────────────────────────────
 
-function UsersTab({ users, onBanAction }: { users: UserProfile[]; onBanAction: (uid: string, action: string) => void }) {
+const INPUT_CLS = "w-full px-3 py-2.5 text-sm text-gray-900 border border-gray-200 rounded-xl focus:outline-none focus:border-[#2323ff] bg-white placeholder-gray-400";
+const SELECT_CLS = "w-full px-3 py-2.5 text-sm text-gray-700 border border-gray-200 rounded-xl focus:outline-none focus:border-[#2323ff] bg-white font-space font-bold cursor-pointer";
+const LABEL_CLS = "text-[10px] font-mono font-bold uppercase tracking-widest text-gray-400";
+
+function UserModal({
+  title, icon, msg, busy, onClose, onSubmit, children, submitLabel,
+}: {
+  title: string; icon: React.ReactNode; msg: { text: string; ok: boolean } | null;
+  busy: boolean; onClose: () => void; onSubmit: (e: React.FormEvent) => void;
+  children: React.ReactNode; submitLabel: string;
+}) {
+  return (
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 sticky top-0 bg-white rounded-t-2xl">
+          <div className="flex items-center gap-2">
+            {icon}
+            <h2 className="font-space font-bold text-gray-900">{title}</h2>
+          </div>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+        <form onSubmit={onSubmit} className="p-6 space-y-4">
+          {msg && (
+            <div className={`px-4 py-3 rounded-xl text-xs font-space font-bold ${msg.ok ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-700 border border-red-200"}`}>
+              {msg.ok ? "✓" : "✗"} {msg.text}
+            </div>
+          )}
+          {children}
+          <div className="flex gap-3 pt-2">
+            <button type="button" onClick={onClose} className="flex-1 px-4 py-2.5 text-sm font-space font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer">
+              Cancel
+            </button>
+            <button type="submit" disabled={busy} className="flex-1 px-4 py-2.5 text-sm font-space font-bold text-white bg-[#2323ff] hover:bg-blue-700 rounded-xl transition-colors cursor-pointer disabled:opacity-50">
+              {busy ? "Saving…" : submitLabel}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function UsersTab({ users, onBanAction, onRefresh }: {
+  users: UserProfile[];
+  onBanAction: (uid: string, action: string) => void;
+  onRefresh: () => void;
+}) {
   const [search, setSearch] = useState("");
   const [planFilter, setPlanFilter] = useState("all");
+
+  // Add state
+  const [showAdd, setShowAdd] = useState(false);
+  const [form, setForm] = useState({ displayName: "", email: "", password: "", plan: "free", scansLimit: "3" });
+  const [addBusy, setAddBusy] = useState(false);
+  const [addMsg, setAddMsg] = useState<{ text: string; ok: boolean } | null>(null);
+
+  // Edit state
+  const [editUser, setEditUser] = useState<UserProfile | null>(null);
+  const [editForm, setEditForm] = useState({ displayName: "", email: "", password: "", plan: "free", scansLimit: "3", role: "user" });
+  const [editBusy, setEditBusy] = useState(false);
+  const [editMsg, setEditMsg] = useState<{ text: string; ok: boolean } | null>(null);
+
+  function planDefaultLimit(p: string) { return p === "agency" ? "-1" : p === "pro" ? "100" : "3"; }
+
+  function openEdit(u: UserProfile) {
+    setEditUser(u);
+    setEditForm({ displayName: u.displayName, email: u.email, password: "", plan: u.plan, scansLimit: String(u.scansLimit), role: u.role });
+    setEditMsg(null);
+  }
+
+  async function handleCreate(e: React.FormEvent) {
+    e.preventDefault();
+    setAddBusy(true); setAddMsg(null);
+    try {
+      const res = await apiFetch("/api/admin/users/create", {
+        method: "POST",
+        body: JSON.stringify({ displayName: form.displayName.trim(), email: form.email.trim(), password: form.password || undefined, plan: form.plan, scansLimit: Number(form.scansLimit) }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setAddMsg({ text: "User created successfully!", ok: true });
+        setForm({ displayName: "", email: "", password: "", plan: "free", scansLimit: "3" });
+        onRefresh();
+        setTimeout(() => { setShowAdd(false); setAddMsg(null); }, 1500);
+      } else { setAddMsg({ text: data.error ?? "Failed to create user", ok: false }); }
+    } catch { setAddMsg({ text: "Network error", ok: false }); }
+    finally { setAddBusy(false); }
+  }
+
+  async function handleUpdate(e: React.FormEvent) {
+    e.preventDefault();
+    if (!editUser) return;
+    setEditBusy(true); setEditMsg(null);
+    try {
+      const res = await apiFetch("/api/admin/users/update", {
+        method: "POST",
+        body: JSON.stringify({ uid: editUser.uid, displayName: editForm.displayName.trim(), email: editForm.email.trim(), password: editForm.password || undefined, plan: editForm.plan, scansLimit: Number(editForm.scansLimit), role: editForm.role }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setEditMsg({ text: "User updated successfully!", ok: true });
+        onRefresh();
+        setTimeout(() => { setEditUser(null); setEditMsg(null); }, 1500);
+      } else { setEditMsg({ text: data.error ?? "Failed to update user", ok: false }); }
+    } catch { setEditMsg({ text: "Network error", ok: false }); }
+    finally { setEditBusy(false); }
+  }
 
   const filtered = useMemo(() =>
     users
@@ -331,20 +437,98 @@ function UsersTab({ users, onBanAction }: { users: UserProfile[]; onBanAction: (
             placeholder="Search by name or email…"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-[#2323ff] bg-white"
+            className="w-full pl-9 pr-4 py-2.5 text-sm text-gray-900 border border-gray-200 rounded-xl focus:outline-none focus:border-[#2323ff] bg-white placeholder-gray-400"
           />
         </div>
         <select
           value={planFilter}
           onChange={e => setPlanFilter(e.target.value)}
-          className="px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-[#2323ff] bg-white font-space font-bold text-gray-700 cursor-pointer"
+          className="px-4 py-2.5 text-sm text-gray-700 border border-gray-200 rounded-xl focus:outline-none focus:border-[#2323ff] bg-white font-space font-bold cursor-pointer"
         >
           <option value="all">All Plans</option>
           <option value="free">Free</option>
           <option value="pro">Pro</option>
           <option value="agency">Agency</option>
         </select>
+        <button
+          onClick={() => { setShowAdd(true); setAddMsg(null); }}
+          className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-space font-bold bg-[#2323ff] text-white rounded-xl hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap"
+        >
+          <UserPlus className="w-4 h-4" />
+          Add User
+        </button>
       </div>
+
+      {/* Add User Modal */}
+      {showAdd && (
+        <UserModal title="Add New User" icon={<UserPlus className="w-4 h-4 text-[#2323ff]" />} msg={addMsg} busy={addBusy} onClose={() => setShowAdd(false)} onSubmit={handleCreate} submitLabel="Create User">
+          <div className="space-y-1">
+            <label className={LABEL_CLS}>Display Name *</label>
+            <input required type="text" value={form.displayName} onChange={e => setForm(f => ({ ...f, displayName: e.target.value }))} placeholder="John Doe" className={INPUT_CLS} />
+          </div>
+          <div className="space-y-1">
+            <label className={LABEL_CLS}>Email *</label>
+            <input required type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="user@example.com" className={INPUT_CLS} />
+          </div>
+          <div className="space-y-1">
+            <label className={LABEL_CLS}>Password <span className="text-gray-300 font-normal normal-case tracking-normal">(leave blank for passwordless)</span></label>
+            <input type="password" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} placeholder="••••••••" className={INPUT_CLS} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className={LABEL_CLS}>Plan</label>
+              <select value={form.plan} onChange={e => setForm(f => ({ ...f, plan: e.target.value, scansLimit: planDefaultLimit(e.target.value) }))} className={SELECT_CLS}>
+                <option value="free">Free</option>
+                <option value="pro">Pro</option>
+                <option value="agency">Agency</option>
+              </select>
+            </div>
+            <div className="space-y-1">
+              <label className={LABEL_CLS}>Scans Limit <span className="text-gray-300 font-normal normal-case tracking-normal">(-1 = ∞)</span></label>
+              <input type="number" min="-1" value={form.scansLimit} onChange={e => setForm(f => ({ ...f, scansLimit: e.target.value }))} className={`${INPUT_CLS} font-mono`} />
+            </div>
+          </div>
+        </UserModal>
+      )}
+
+      {/* Edit User Modal */}
+      {editUser && (
+        <UserModal title="Edit User" icon={<Pencil className="w-4 h-4 text-[#2323ff]" />} msg={editMsg} busy={editBusy} onClose={() => setEditUser(null)} onSubmit={handleUpdate} submitLabel="Save Changes">
+          <div className="space-y-1">
+            <label className={LABEL_CLS}>Display Name *</label>
+            <input required type="text" value={editForm.displayName} onChange={e => setEditForm(f => ({ ...f, displayName: e.target.value }))} className={INPUT_CLS} />
+          </div>
+          <div className="space-y-1">
+            <label className={LABEL_CLS}>Email *</label>
+            <input required type="email" value={editForm.email} onChange={e => setEditForm(f => ({ ...f, email: e.target.value }))} className={INPUT_CLS} />
+          </div>
+          <div className="space-y-1">
+            <label className={LABEL_CLS}>New Password <span className="text-gray-300 font-normal normal-case tracking-normal">(leave blank to keep current)</span></label>
+            <input type="password" value={editForm.password} onChange={e => setEditForm(f => ({ ...f, password: e.target.value }))} placeholder="••••••••" className={INPUT_CLS} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className={LABEL_CLS}>Plan</label>
+              <select value={editForm.plan} onChange={e => setEditForm(f => ({ ...f, plan: e.target.value, scansLimit: planDefaultLimit(e.target.value) }))} className={SELECT_CLS}>
+                <option value="free">Free</option>
+                <option value="pro">Pro</option>
+                <option value="agency">Agency</option>
+              </select>
+            </div>
+            <div className="space-y-1">
+              <label className={LABEL_CLS}>Scans Limit <span className="text-gray-300 font-normal normal-case tracking-normal">(-1 = ∞)</span></label>
+              <input type="number" min="-1" value={editForm.scansLimit} onChange={e => setEditForm(f => ({ ...f, scansLimit: e.target.value }))} className={`${INPUT_CLS} font-mono`} />
+            </div>
+          </div>
+          <div className="space-y-1">
+            <label className={LABEL_CLS}>Role</label>
+            <select value={editForm.role} onChange={e => setEditForm(f => ({ ...f, role: e.target.value }))} className={SELECT_CLS}>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        </UserModal>
+      )}
 
       <div className="bg-white border border-gray-150 rounded-2xl overflow-hidden shadow-sm">
         <div className="px-5 py-3 bg-gray-50 border-b border-gray-150">
@@ -359,7 +543,7 @@ function UsersTab({ users, onBanAction }: { users: UserProfile[]; onBanAction: (
                 <th className="px-5 py-3">Usage</th>
                 <th className="px-5 py-3">Joined</th>
                 <th className="px-5 py-3">Billing</th>
-                <th className="px-5 py-3">Action</th>
+                <th className="px-5 py-3">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -389,10 +573,7 @@ function UsersTab({ users, onBanAction }: { users: UserProfile[]; onBanAction: (
                       </span>
                       {u.scansLimit > 0 && (
                         <div className="w-16 h-1 bg-gray-100 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-[#2323ff] rounded-full"
-                            style={{ width: `${Math.min((u.scansUsed / u.scansLimit) * 100, 100)}%` }}
-                          />
+                          <div className="h-full bg-[#2323ff] rounded-full" style={{ width: `${Math.min((u.scansUsed / u.scansLimit) * 100, 100)}%` }} />
                         </div>
                       )}
                     </div>
@@ -405,25 +586,32 @@ function UsersTab({ users, onBanAction }: { users: UserProfile[]; onBanAction: (
                       u.paymentStatus === "active"         ? "text-green-600" :
                       u.paymentStatus === "payment_failed" ? "text-red-500"   : "text-gray-400"
                     }`}>
-                      {u.paymentStatus === "active"         ? "✓ Active" :
-                       u.paymentStatus === "payment_failed" ? "✗ Failed" : "—"}
+                      {u.paymentStatus === "active" ? "✓ Active" : u.paymentStatus === "payment_failed" ? "✗ Failed" : "—"}
                     </span>
                   </td>
                   <td className="px-5 py-3.5">
-                    {u.role === "admin" ? (
-                      <span className="text-[10px] font-mono text-gray-400">SYS_ADMIN</span>
-                    ) : (
+                    <div className="flex items-center gap-1.5">
                       <button
-                        onClick={() => onBanAction(u.uid, u.paymentStatus === "payment_failed" ? "unban" : "ban")}
-                        className={`px-3 py-1.5 rounded-lg text-[11px] font-space font-bold cursor-pointer transition-colors ${
-                          u.paymentStatus === "payment_failed"
-                            ? "bg-green-50 text-green-700 hover:bg-green-100"
-                            : "bg-red-50 text-red-700 hover:bg-red-100"
-                        }`}
+                        onClick={() => openEdit(u)}
+                        className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-space font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer transition-colors"
+                        title="Edit user"
                       >
-                        {u.paymentStatus === "payment_failed" ? "Unban" : "Ban"}
+                        <Pencil className="w-3 h-3" />
+                        Edit
                       </button>
-                    )}
+                      {u.role !== "admin" && (
+                        <button
+                          onClick={() => onBanAction(u.uid, u.paymentStatus === "payment_failed" ? "unban" : "ban")}
+                          className={`px-2.5 py-1.5 rounded-lg text-[11px] font-space font-bold cursor-pointer transition-colors ${
+                            u.paymentStatus === "payment_failed"
+                              ? "bg-green-50 text-green-700 hover:bg-green-100"
+                              : "bg-red-50 text-red-700 hover:bg-red-100"
+                          }`}
+                        >
+                          {u.paymentStatus === "payment_failed" ? "Unban" : "Ban"}
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -475,7 +663,7 @@ function ScansTab({ scans, onDeleteScan }: { scans: ScanResult[]; onDeleteScan: 
             placeholder="Search product title or detected brand…"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-[#2323ff] bg-white"
+            className="w-full pl-9 pr-4 py-2.5 text-sm text-gray-900 border border-gray-200 rounded-xl focus:outline-none focus:border-[#2323ff] bg-white placeholder-gray-400"
           />
         </div>
         <select
@@ -572,8 +760,13 @@ function ScansTab({ scans, onDeleteScan }: { scans: ScanResult[]; onDeleteScan: 
 function SettingsTab({ users, onRefresh }: { users: UserProfile[]; onRefresh: () => void }) {
   const [busy, setBusy] = useState<string | null>(null);
   const [msg, setMsg] = useState<{ text: string; ok: boolean } | null>(null);
+  const [scanLimits, setScanLimits] = useState<Record<string, string>>({});
 
-  async function callAction(endpoint: string, body: object, label: string) {
+  function getLimitVal(u: UserProfile): string {
+    return scanLimits[u.uid] ?? String(u.scansLimit);
+  }
+
+  async function callAction(endpoint: string, body: object, label: string, onSuccess?: () => void) {
     setBusy(label);
     setMsg(null);
     try {
@@ -582,6 +775,7 @@ function SettingsTab({ users, onRefresh }: { users: UserProfile[]; onRefresh: ()
       if (res.ok) {
         setMsg({ text: data.success ? "Done!" : data.error ?? "Done!", ok: res.ok });
         onRefresh();
+        onSuccess?.();
       } else {
         setMsg({ text: data.error ?? "Failed", ok: false });
       }
@@ -629,7 +823,7 @@ function SettingsTab({ users, onRefresh }: { users: UserProfile[]; onRefresh: ()
         <div className="flex items-center gap-2">
           <Settings className="w-4 h-4 text-[#2323ff]" />
           <h3 className="font-space font-bold text-sm text-gray-800">User Actions</h3>
-          <span className="text-[10px] text-gray-400 font-mono">Set plan · Promote admin · Reset scans</span>
+          <span className="text-[10px] text-gray-400 font-mono">Set plan · Promote admin · Scans limit · Reset usage</span>
         </div>
 
         <div className="overflow-x-auto">
@@ -640,7 +834,8 @@ function SettingsTab({ users, onRefresh }: { users: UserProfile[]; onRefresh: ()
                 <th className="pb-2 pr-4">Current Plan</th>
                 <th className="pb-2 pr-4">Set Plan</th>
                 <th className="pb-2 pr-4">Role</th>
-                <th className="pb-2">Scans</th>
+                <th className="pb-2 pr-4">Scans Limit</th>
+                <th className="pb-2">Usage</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -689,11 +884,37 @@ function SettingsTab({ users, onRefresh }: { users: UserProfile[]; onRefresh: ()
                       </button>
                     )}
                   </td>
+                  <td className="py-3 pr-4">
+                    <div className="flex items-center gap-1">
+                      <input
+                        type="number"
+                        min="-1"
+                        value={getLimitVal(u)}
+                        onChange={e => setScanLimits(m => ({ ...m, [u.uid]: e.target.value }))}
+                        className="w-16 px-1.5 py-1 text-[10px] text-gray-900 font-mono border border-gray-200 rounded-lg focus:outline-none focus:border-[#2323ff]"
+                        title="-1 = unlimited"
+                      />
+                      <button
+                        disabled={busy === `limit-${u.uid}`}
+                        onClick={() => callAction(
+                          "/api/admin/users/set-scans-limit",
+                          { uid: u.uid, scansLimit: Number(getLimitVal(u)) },
+                          `limit-${u.uid}`,
+                          () => setScanLimits(m => { const n = { ...m }; delete n[u.uid]; return n; })
+                        )}
+                        className="px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-blue-50 hover:bg-blue-100 text-blue-700 cursor-pointer transition-colors disabled:opacity-40"
+                      >
+                        {busy === `limit-${u.uid}` ? "…" : "Set"}
+                      </button>
+                    </div>
+                    <div className="text-[9px] text-gray-400 mt-0.5 font-mono">-1 = unlimited</div>
+                  </td>
                   <td className="py-3">
                     <button
                       disabled={busy === `reset-${u.uid}`}
                       onClick={() => callAction("/api/admin/users/reset-scans", { uid: u.uid }, `reset-${u.uid}`)}
                       className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-amber-50 hover:bg-amber-100 text-amber-700 cursor-pointer transition-colors disabled:opacity-40"
+                      title="Reset scans used to 0"
                     >
                       <RefreshCw className={`w-3 h-3 ${busy === `reset-${u.uid}` ? "animate-spin" : ""}`} />
                       Reset
@@ -790,7 +1011,7 @@ export function AdminDashboard({
 
       {/* Tab content */}
       {tab === "overview"  && <OverviewTab stats={stats} />}
-      {tab === "users"     && <UsersTab users={stats.users} onBanAction={onBanAction} />}
+      {tab === "users"     && <UsersTab users={stats.users} onBanAction={onBanAction} onRefresh={onRefresh} />}
       {tab === "scans"     && <ScansTab scans={stats.scans} onDeleteScan={onDeleteScan} />}
       {tab === "settings"  && <SettingsTab users={stats.users} onRefresh={onRefresh} />}
     </div>
