@@ -28,10 +28,6 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   // Auth Form State
-  const [authEmail, setAuthEmail] = useState("");
-  const [authPassword, setAuthPassword] = useState("");
-  const [authDisplayName, setAuthDisplayName] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
   const [authError, setAuthError] = useState("");
   const [refLinkCopied, setRefLinkCopied] = useState(false);
 
@@ -202,40 +198,6 @@ export default function App() {
       }
     }
   }, [view]);
-
-  // Handle Authentication submit
-  const handleAuthSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setAuthError("");
-    if (!authEmail || !authPassword) {
-      setAuthError("Please provide your email and credentials.");
-      return;
-    }
-
-    try {
-      const response = await apiFetch("/api/auth/login", {
-        method: "POST",
-        body: JSON.stringify({
-          email: authEmail,
-          password: authPassword,
-          displayName: authDisplayName,
-          refCode: sessionStorage.getItem("mumy_ref") ?? undefined,
-        })
-      });
-      sessionStorage.removeItem("mumy_ref");
-      const data = await response.json();
-      if (data.success) {
-        setToken(data.token);
-        localStorage.setItem("mumy_user", JSON.stringify(data.user));
-        setUser(data.user);
-        setView("scanner");
-      } else {
-        setAuthError(data.error || "Authentication failure. Check your credentials.");
-      }
-    } catch (err) {
-      setAuthError("Connection error while calling authorization services.");
-    }
-  };
 
   // Real Google OAuth via @react-oauth/google
   const googleLogin = useGoogleLogin({
@@ -1425,14 +1387,14 @@ export default function App() {
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-blue/20 w-48 h-48 rounded-full blur-[60px] pointer-events-none"></div>
 
                   <div className="text-center space-y-2 relative z-10">
-                        <img
-                        src="/icon.png"
-                        alt="MUMY"
-                        className={`w-12 h-12 mx-auto mb-2 object-contain shrink-0`}
-                        draggable={false}
-                      />
+                    <img
+                      src="/icon.png"
+                      alt="MUMY"
+                      className="w-12 h-12 mx-auto mb-2 object-contain shrink-0"
+                      draggable={false}
+                    />
                     <h2 className="text-2xl font-space font-extrabold text-white">
-                      {isSignUp ? "Create Admin Credentials" : "Sign In to Store Protection"}
+                      Sign In to Store Protection
                     </h2>
                     <p className="text-xs text-gray-400">
                       Pre-publication verification suite. Secure and compliant in under 8s.
@@ -1446,58 +1408,8 @@ export default function App() {
                     </div>
                   )}
 
-                  <form onSubmit={handleAuthSubmit} className="space-y-4 relative z-10">
-                    {isSignUp && (
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-gray-400">DisplayName</label>
-                        <input
-                          type="text"
-                          placeholder="e.g. Sarah K."
-                          value={authDisplayName}
-                          onChange={(e) => setAuthDisplayName(e.target.value)}
-                          className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-xl text-sm font-sans focus:outline-none focus:border-brand-green"
-                        />
-                      </div>
-                    )}
-
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-gray-400">Email Address</label>
-                      <input
-                        type="email"
-                        placeholder="example@gmail.com"
-                        value={authEmail}
-                        onChange={(e) => setAuthEmail(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-xl text-sm font-sans focus:outline-none focus:border-brand-green"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-gray-400">Password</label>
-                      <input
-                        type="password"
-                        placeholder="••••••••"
-                        value={authPassword}
-                        onChange={(e) => setAuthPassword(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-xl text-sm font-sans focus:outline-none focus:border-brand-green"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full py-3.5 bg-[#2323ff] hover:bg-blue-700 text-white font-space font-extrabold rounded-xl transition-all cursor-pointer shadow-md text-sm mt-3"
-                    >
-                      {isSignUp ? "Activate Store Shield →" : "Sign In to Dashboard →"}
-                    </button>
-                  </form>
-
-                  {/* GOOGLE SIGN IN */}
+                  {/* OAUTH SIGN IN */}
                   <div className="space-y-3 relative z-10">
-                    <div className="flex items-center gap-2 text-xs text-gray-500 font-mono">
-                      <div className="h-[1px] bg-white/10 flex-1"></div>
-                      <span>or</span>
-                      <div className="h-[1px] bg-white/10 flex-1"></div>
-                    </div>
-
                     <button
                       type="button"
                       onClick={triggerGoogleLogin}
@@ -1529,18 +1441,6 @@ export default function App() {
                         Sign in with Microsoft
                       </button>
                     )}
-                  </div>
-
-                  <div className="text-center pt-2 relative z-10">
-                    <button
-                      onClick={() => {
-                        setIsSignUp(!isSignUp);
-                        setAuthError("");
-                      }}
-                      className="text-xs font-space font-bold text-gray-300 hover:text-brand-green"
-                    >
-                      {isSignUp ? "Already have an account? Sign In" : "Need custom licenses? Create Profile"}
-                    </button>
                   </div>
 
                 </div>
