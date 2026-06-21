@@ -18,6 +18,7 @@ import { AdminDashboard } from "./components/AdminComponents";
 import AdminLoginPage from "./components/AdminLoginPage";
 import { PWAInstallBanner } from "./components/PWAInstallBanner";
 import { useGoogleLogin } from "@react-oauth/google";
+import { msalInstance, msalReady, msalRedirectResult, isMicrosoftConfigured } from "./msalConfig";
 import { apiFetch, setToken, clearAuth, getToken } from "./api";
 import { UserProfile, ScanResult } from "./types";
 
@@ -32,6 +33,7 @@ export default function App() {
   const [authDisplayName, setAuthDisplayName] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [authError, setAuthError] = useState("");
+  const [refLinkCopied, setRefLinkCopied] = useState(false);
 
   // Scanner States
   const [scanLoading, setScanLoading] = useState(false);
@@ -65,6 +67,50 @@ export default function App() {
     const ref = params.get("ref");
     if (ref) sessionStorage.setItem("mumy_ref", ref);
   }, []);
+
+  // Handle Microsoft redirect flow (fires when popup was blocked and MSAL
+  // fell back to full-page redirect — processes the #code in the URL)
+  useEffect(() => {
+    if (!isMicrosoftConfigured) return;
+    msalRedirectResult
+      .then(async (result) => {
+        if (!result?.accessToken) return;
+        try {
+          const response = await apiFetch("/api/auth/microsoft", {
+            method: "POST",
+            body: JSON.stringify({
+              accessToken: result.accessToken,
+              refCode: sessionStorage.getItem("mumy_ref") ?? undefined,
+            }),
+          });
+          sessionStorage.removeItem("mumy_ref");
+          const data = await response.json();
+          if (data.success) {
+            setToken(data.token);
+            localStorage.setItem("mumy_user", JSON.stringify(data.user));
+            setUser(data.user);
+            setView("scanner");
+            window.history.replaceState({}, document.title, window.location.pathname);
+          } else {
+            setAuthError(data.error || "Microsoft sign-in failed.");
+            setView("login");
+          }
+        } catch (e: any) {
+          console.error("[MS redirect] backend call failed:", e);
+          setAuthError("Microsoft sign-in error: " + (e?.message ?? "network error"));
+          setView("login");
+        }
+      })
+      .catch((e: any) => {
+        console.error("[MS redirect] MSAL handleRedirectPromise failed:", e);
+        // Clear stale MSAL interaction state so the next attempt works
+        Object.keys(sessionStorage)
+          .filter(k => k.startsWith("msal."))
+          .forEach(k => sessionStorage.removeItem(k));
+        setAuthError("Microsoft sign-in error: " + (e?.errorMessage ?? e?.message ?? String(e)));
+        setView("login");
+      });
+  }, []); // eslint-disable-line
 
   // Redirect logged-in users away from landing page to scanner
   useEffect(() => {
@@ -220,6 +266,34 @@ export default function App() {
   });
 
   const triggerGoogleLogin = () => googleLogin();
+
+  // Microsoft OAuth via full-page redirect (more reliable than popup across browsers)
+  const triggerMicrosoftLogin = async () => {
+    try {
+      await msalReady;
+      // loginRedirect navigates the page away — result is handled in the
+      // msalRedirectResult useEffect below when the page loads on return
+      await msalInstance.loginRedirect({
+        scopes: ["User.Read", "openid", "profile", "email"],
+      });
+    } catch (e: any) {
+      console.error("[MS login] error:", e?.errorCode, e?.errorMessage ?? e?.message);
+      const code = e?.errorCode ?? "";
+      if (code === "user_cancelled" || code === "access_denied") return;
+      if (code === "interaction_in_progress") {
+        Object.keys(sessionStorage)
+          .filter(k => k.startsWith("msal."))
+          .forEach(k => sessionStorage.removeItem(k));
+        setAuthError("Sign-in interrupted. Please click the Microsoft button again.");
+        return;
+      }
+      setAuthError(
+        e?.errorMessage
+          ? `Microsoft: ${e.errorMessage}`
+          : `Microsoft sign-in failed (${code || (e?.message ?? "unknown error")})`
+      );
+    }
+  };
 
   // Complete Scanning dispatcher
   const handleRunScan = async (payload: {
@@ -1218,10 +1292,18 @@ export default function App() {
                                         {refLink}
                                       </div>
                                       <button
-                                        onClick={() => navigator.clipboard.writeText(refLink)}
-                                        className="shrink-0 px-3 py-2.5 bg-[#2cff05]/10 hover:bg-[#2cff05]/20 border border-[#2cff05]/20 text-[#2cff05] text-xs font-space font-extrabold rounded-xl cursor-pointer transition-colors"
+                                        onClick={() => {
+                                          navigator.clipboard.writeText(refLink);
+                                          setRefLinkCopied(true);
+                                          setTimeout(() => setRefLinkCopied(false), 2000);
+                                        }}
+                                        className={`shrink-0 px-3 py-2.5 border text-xs font-space font-extrabold rounded-xl cursor-pointer transition-all duration-200 ${
+                                          refLinkCopied
+                                            ? "bg-[#2cff05]/20 border-[#2cff05]/60 text-[#2cff05] scale-95"
+                                            : "bg-[#2cff05]/10 hover:bg-[#2cff05]/20 border-[#2cff05]/20 text-[#2cff05]"
+                                        }`}
                                       >
-                                        Copy
+                                        {refLinkCopied ? "✓ Copied!" : "Copy"}
                                       </button>
                                     </div>
                                   </div>
@@ -1430,6 +1512,23 @@ export default function App() {
                       </svg>
                       Sign in with Google
                     </button>
+
+                    {isMicrosoftConfigured && (
+                      <button
+                        type="button"
+                        onClick={triggerMicrosoftLogin}
+                        className="w-full bg-white hover:bg-gray-50 active:bg-gray-100 text-[#1b1b1b] font-medium py-2.5 px-4 rounded-lg text-sm flex items-center justify-center gap-3 cursor-pointer shadow-sm transition-colors border border-[#8c8c8c] hover:border-[#666]"
+                        style={{ fontFamily: "'Segoe UI', sans-serif" }}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="1" y="1" width="9" height="9" fill="#F25022"/>
+                          <rect x="11" y="1" width="9" height="9" fill="#7FBA00"/>
+                          <rect x="1" y="11" width="9" height="9" fill="#00A4EF"/>
+                          <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
+                        </svg>
+                        Sign in with Microsoft
+                      </button>
+                    )}
                   </div>
 
                   <div className="text-center pt-2 relative z-10">
