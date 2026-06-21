@@ -99,7 +99,14 @@ export function Hero({ onStartScan }: { onStartScan: () => void }) {
             {/* Header / Close button */}
             <div className="flex items-center justify-between p-4 border-b border-white/5 bg-[#0e0e0e]">
               <div className="flex items-center gap-2">
-                <LogoIcon className="w-6 h-6" />
+
+                <img
+                  src="/icon.png"
+                  alt="MUMY"
+                  className={`w-6 h-6 object-contain shrink-0`}
+                  draggable={false}
+                />
+               
                 <span className="text-xs font-mono font-bold text-gray-300">MUMY COMPLIANCE WALKTHROUGH</span>
               </div>
               <button 
