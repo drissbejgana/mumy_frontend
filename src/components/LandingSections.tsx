@@ -120,7 +120,7 @@ export function Hero({ onStartScan }: { onStartScan: () => void }) {
             <div className="relative pt-[56.25%] w-full bg-black">
               <iframe 
                 className="absolute inset-0 w-full h-full"
-                src="https://www.youtube.com/embed/KIe_2EaMCsQ?autoplay=1"
+                src="https://www.youtube.com/embed/u9mYCPv15UA?autoplay=1"
                 title="MUMY Compliance Scan Walkthrough Video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
