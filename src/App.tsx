@@ -563,10 +563,7 @@ export default function App() {
                   Sign In
                 </button>
                 <button
-                  onClick={() => {
-                    setIsSignUp(true);
-                    navigateTo("login");
-                  }}
+                  onClick={() => navigateTo("login")}
                   className="bg-[#2323ff] hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-space font-extrabold shadow-sm cursor-pointer glow-hover focus:outline-none"
                 >
                   Sign Up Free
@@ -694,7 +691,6 @@ export default function App() {
                   </button>
                   <button
                     onClick={() => {
-                      setIsSignUp(true);
                       navigateTo("login");
                       setIsMobileMenuOpen(false);
                     }}
