@@ -85,8 +85,8 @@ export default function App() {
             setToken(data.token);
             localStorage.setItem("mumy_user", JSON.stringify(data.user));
             setUser(data.user);
-            setView("scanner");
             window.history.replaceState({}, document.title, window.location.pathname);
+            handlePostLoginRedirect(data.user);
           } else {
             setAuthError(data.error || "Microsoft sign-in failed.");
             setView("login");
@@ -216,7 +216,7 @@ export default function App() {
           setToken(data.token);
           localStorage.setItem("mumy_user", JSON.stringify(data.user));
           setUser(data.user);
-          setView("scanner");
+          handlePostLoginRedirect(data.user);
         } else {
           setAuthError(data.error || "Google sign-in failed.");
         }
@@ -302,6 +302,7 @@ export default function App() {
   // Handle direct navigation to stripe simulation
   const handleStripeCheckout = async (plan: string, cycle: "monthly" | "yearly" = "monthly") => {
     if (!user) {
+      sessionStorage.setItem("mumy_pending_plan", JSON.stringify({ plan, cycle }));
       setView("login");
       return;
     }
@@ -323,6 +324,26 @@ export default function App() {
     } catch (e) {
       console.error("Stripe gateway down", e);
     }
+  };
+
+  const handlePostLoginRedirect = (loggedInUser: typeof user) => {
+    const pending = sessionStorage.getItem("mumy_pending_plan");
+    if (pending) {
+      sessionStorage.removeItem("mumy_pending_plan");
+      try {
+        const { plan, cycle } = JSON.parse(pending);
+        apiFetch("/api/stripe/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ priceId: plan, cycle, userId: loggedInUser!.uid, userEmail: loggedInUser!.email }),
+        }).then(res => res.json()).then(data => {
+          if (data.url) window.location.href = data.url;
+          else setView("scanner");
+        }).catch(() => setView("scanner"));
+        return;
+      } catch {}
+    }
+    setView("scanner");
   };
 
   // Open Stripe Customer Portal
