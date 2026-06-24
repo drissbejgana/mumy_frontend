@@ -1193,17 +1193,17 @@ export default function App() {
                                 <div>
                                   <h4 className="font-space font-bold text-white text-sm">Become an Affiliate</h4>
                                   <p className="text-xs text-gray-500 mt-0.5 font-sans leading-relaxed">
-                                    Earn <span className="text-[#2cff05] font-bold">$5 per Pro</span> and <span className="text-[#2cff05] font-bold">$15 per Agency</span> referral. Share your unique link, get paid automatically when friends upgrade.
+                                    Earn <span className="text-[#2cff05] font-bold">20% commission</span> on every Pro and Agency referral. Share your unique link, get paid automatically when friends upgrade.
                                   </p>
                                 </div>
                               </div>
                               <div className="grid grid-cols-3 gap-3 text-center text-[10px] font-mono text-gray-500">
                                 <div className="p-3 bg-white/5 rounded-xl space-y-1">
-                                  <div className="text-base font-space font-extrabold text-white">$5</div>
+                                  <div className="text-base font-space font-extrabold text-white">20%</div>
                                   <div className="uppercase">Pro plan</div>
                                 </div>
                                 <div className="p-3 bg-white/5 rounded-xl space-y-1">
-                                  <div className="text-base font-space font-extrabold text-white">$15</div>
+                                  <div className="text-base font-space font-extrabold text-white">20%</div>
                                   <div className="uppercase">Agency plan</div>
                                 </div>
                                 <div className="p-3 bg-white/5 rounded-xl space-y-1">
@@ -1237,7 +1237,7 @@ export default function App() {
                                     <Sparkles className="w-4 h-4 text-[#2cff05]" />
                                     Affiliate Program
                                   </h4>
-                                  <p className="text-[11px] text-gray-500 mt-0.5">Earn $5 per Pro referral · $15 per Agency referral</p>
+                                  <p className="text-[11px] text-gray-500 mt-0.5">Earn 20% commission on Pro & Agency referrals</p>
                                 </div>
                                 <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-[#2cff05]/10 text-[#2cff05] border border-[#2cff05]/20">
                                   ACTIVE
