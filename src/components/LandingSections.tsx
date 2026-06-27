@@ -108,6 +108,14 @@ export function Hero({ onStartScan }: { onStartScan: () => void }) {
                 />
                
                 <span className="text-xs font-mono font-bold text-gray-300">MUMY COMPLIANCE WALKTHROUGH</span>
+                <span className="flex items-center gap-1 ml-1 px-1.5 py-0.5 rounded bg-purple-500/15 border border-purple-500/30 text-purple-400 text-[10px] font-sans font-semibold tracking-wide">
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2a1 1 0 0 1 .967.744l1.498 5.789 5.789 1.498a1 1 0 0 1 0 1.938l-5.789 1.498-1.498 5.789a1 1 0 0 1-1.934 0l-1.498-5.789-5.789-1.498a1 1 0 0 1 0-1.938l5.789-1.498L11.033 2.744A1 1 0 0 1 12 2z"/>
+                    <path d="M19.5 2a.75.75 0 0 1 .724.553l.776 2.947 2.947.776a.75.75 0 0 1 0 1.448l-2.947.776-.776 2.947a.75.75 0 0 1-1.448 0l-.776-2.947-2.947-.776a.75.75 0 0 1 0-1.448l2.947-.776.776-2.947A.75.75 0 0 1 19.5 2z"/>
+                    <path d="M5 15a.5.5 0 0 1 .483.368l.517 1.965 1.965.517a.5.5 0 0 1 0 .966l-1.965.517-.517 1.965a.5.5 0 0 1-.966 0l-.517-1.965-1.965-.517a.5.5 0 0 1 0-.966l1.965-.517.517-1.965A.5.5 0 0 1 5 15z"/>
+                  </svg>
+                  AI Generated
+                </span>
               </div>
               <button 
                 onClick={() => setIsVideoModalOpen(false)}
