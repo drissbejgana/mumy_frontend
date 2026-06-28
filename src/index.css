@@ -8,7 +8,7 @@
   
   --color-brand-blue: #2323ff;
   --color-brand-green: #2cff05;
-  --color-brand-dark: #0a0a0a;
+  --color-brand-dark: #E5E7EB;
   
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -16,9 +16,9 @@
 /* Custom background pattern for landing pages */
 .grid-bg-pattern {
   background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, rgba(35, 35, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(35, 35, 255, 0.05) 1px, transparent 1px);
+  background-image:
+    linear-gradient(to right, rgba(100, 116, 139, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(100, 116, 139, 0.12) 1px, transparent 1px);
 }
 
 .glow-hover:hover {

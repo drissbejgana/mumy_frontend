@@ -15,11 +15,11 @@ export default function ResultDashboard({ scan, onReset }: ResultDashboardProps)
   const [openSection, setOpenSection] = useState<string>("geminiVision");
 
   const subScoreKeys = [
-    { label: "Visual Reference Risk",   val: scan.subScores.visualRisk,    desc: "Direct overlaps against protected character visuals or catalog templates." },
-    { label: "Text Lexicon Risk",        val: scan.subScores.textRisk,       desc: "Unlicensed brand keywords or phrases identified in titles or descriptions." },
-    { label: "Metadata Evasion Risk",    val: scan.subScores.metadataRisk,   desc: "Franchise tags or hidden context pointers listed in backing tags." },
-    { label: "Cross-Modal Convergence",  val: scan.subScores.crossModal,     desc: "Co-occurrence of blurred pixels matched with evasion synonyms." },
-    { label: "Obfuscation Signature",    val: scan.subScores.obfuscation,    desc: "Pixel Gaussian tampering, sharpness spikes or artificial blurs." }
+    { label: "Visual Reference Risk",   val: scan.subScores.visualRisk,   desc: "Direct overlaps against protected character visuals or catalog templates." },
+    { label: "Text Lexicon Risk",        val: scan.subScores.textRisk,      desc: "Unlicensed brand keywords or phrases identified in titles or descriptions." },
+    { label: "Metadata Evasion Risk",    val: scan.subScores.metadataRisk,  desc: "Franchise tags or hidden context pointers listed in backing tags." },
+    { label: "Cross-Modal Convergence",  val: scan.subScores.crossModal,    desc: "Co-occurrence of blurred pixels matched with evasion synonyms." },
+    { label: "Obfuscation Signature",    val: scan.subScores.obfuscation,   desc: "Pixel Gaussian tampering, sharpness spikes or artificial blurs." }
   ];
 
   const getBarColor = (val: number) => {
@@ -32,30 +32,30 @@ export default function ResultDashboard({ scan, onReset }: ResultDashboardProps)
     switch (verdict) {
       case "BLOCK_LISTING":
         return {
-          border: "border-red-500/30",
-          bg: "bg-red-500/10",
-          icon: <AlertOctagon className="w-8 h-8 text-red-400 shrink-0" />,
+          border: "border-red-300",
+          bg: "bg-red-50",
+          icon: <AlertOctagon className="w-8 h-8 text-red-500 shrink-0" />,
           title: "HIGH RISK — DO NOT PUBLISH",
-          titleColor: "text-red-400",
+          titleColor: "text-red-600",
           desc: "This listing contains heavy intellectual property overlaps. Publishing is highly likely to cause automatic store suspension."
         };
       case "MANUAL_REVIEW":
         return {
-          border: "border-amber-500/30",
-          bg: "bg-amber-500/10",
-          icon: <AlertTriangle className="w-8 h-8 text-amber-400 shrink-0" />,
+          border: "border-amber-300",
+          bg: "bg-amber-50",
+          icon: <AlertTriangle className="w-8 h-8 text-amber-500 shrink-0" />,
           title: "CAUTION — MANUAL REVIEW REQUIRED",
-          titleColor: "text-amber-400",
+          titleColor: "text-amber-600",
           desc: "We found moderate risk indicators, blurry areas, or evasive text keywords. Double check elements before publishing."
         };
       case "SAFE_TO_PUBLISH":
       default:
         return {
-          border: "border-[#2cff05]/20",
-          bg: "bg-[#2cff05]/5",
+          border: "border-green-300",
+          bg: "bg-green-50",
           icon: <ShieldCheck className="w-8 h-8 text-[#2cff05] shrink-0" />,
           title: "CLEAR — SAFE TO PUBLISH",
-          titleColor: "text-[#2cff05]",
+          titleColor: "text-green-600",
           desc: "No intellectual property infringement, fuzzy phonetic synonyms or hidden tags were detected. Your listing matches standard compliance guidelines."
         };
     }
@@ -64,14 +64,14 @@ export default function ResultDashboard({ scan, onReset }: ResultDashboardProps)
   const banner = getVerdictBanner(scan.verdict);
 
   const accordions = [
-    { key: "geminiVision",   label: "Agent 1: Deep Vision Analysis",          value: scan.chainOfThought.geminiVision,   icon: <Sparkles className="w-4 h-4 text-purple-400" /> },
-    { key: "cloudVision",    label: "Agent 2: Reverse Visual Query Matcher",   value: scan.chainOfThought.cloudVision,    icon: <Search   className="w-4 h-4 text-blue-400"   /> },
-    { key: "blurDetective",  label: "Agent 3: Pixel Forensic Analyzer",        value: scan.chainOfThought.blurDetective,  icon: <Activity className="w-4 h-4 text-sky-400"    /> },
-    { key: "textDecoder",    label: "Agent 4: Natural Spelling Decoder",        value: scan.chainOfThought.textDecoder,    icon: <FileText className="w-4 h-4 text-indigo-400" /> },
-    { key: "fusionEngine",   label: "Agent 5: Probabilistic Fusion Engine",     value: scan.chainOfThought.fusionEngine,   icon: <Database className="w-4 h-4 text-emerald-400"/> }
+    { key: "geminiVision",   label: "Agent 1: Deep Vision Analysis",          value: scan.chainOfThought.geminiVision,   icon: <Sparkles className="w-4 h-4 text-purple-500" /> },
+    { key: "cloudVision",    label: "Agent 2: Reverse Visual Query Matcher",   value: scan.chainOfThought.cloudVision,    icon: <Search   className="w-4 h-4 text-blue-500"   /> },
+    { key: "blurDetective",  label: "Agent 3: Pixel Forensic Analyzer",        value: scan.chainOfThought.blurDetective,  icon: <Activity className="w-4 h-4 text-sky-500"    /> },
+    { key: "textDecoder",    label: "Agent 4: Natural Spelling Decoder",        value: scan.chainOfThought.textDecoder,    icon: <FileText className="w-4 h-4 text-indigo-500" /> },
+    { key: "fusionEngine",   label: "Agent 5: Probabilistic Fusion Engine",     value: scan.chainOfThought.fusionEngine,   icon: <Database className="w-4 h-4 text-emerald-500"/> }
   ];
 
-  const card = "bg-[#111111] border border-white/10 rounded-2xl";
+  const card = "bg-white border border-gray-200 rounded-2xl";
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto px-1 py-4">
@@ -81,12 +81,12 @@ export default function ResultDashboard({ scan, onReset }: ResultDashboardProps)
         {banner.icon}
         <div className="flex-1">
           <h2 className={`text-lg font-space font-extrabold tracking-tight mb-1 ${banner.titleColor}`}>{banner.title}</h2>
-          <p className="text-sm text-gray-400 leading-relaxed font-sans">{banner.desc}</p>
+          <p className="text-sm text-gray-600 leading-relaxed font-sans">{banner.desc}</p>
         </div>
         {onReset && (
           <button
             onClick={onReset}
-            className="shrink-0 bg-white/10 border border-white/10 hover:bg-white/15 text-white px-5 py-2.5 rounded-xl text-sm font-space font-bold transition-colors cursor-pointer"
+            className="shrink-0 bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-800 px-5 py-2.5 rounded-xl text-sm font-space font-bold transition-colors cursor-pointer"
           >
             Scan Another Listing
           </button>
@@ -101,21 +101,21 @@ export default function ResultDashboard({ scan, onReset }: ResultDashboardProps)
 
           {/* DETECTED IP PROFILE */}
           <div className={`p-5 ${card} space-y-4`}>
-            <h4 className="font-space font-bold text-gray-400 text-xs uppercase tracking-widest border-b border-white/10 pb-3">
+            <h4 className="font-space font-bold text-gray-500 text-xs uppercase tracking-widest border-b border-gray-100 pb-3">
               Matched IP Catalog Profile
             </h4>
             <div className="space-y-1.5">
-              <p className="text-xs text-gray-600 font-sans">Identified Associated Brand / Attribute:</p>
+              <p className="text-xs text-gray-500 font-sans">Identified Associated Brand / Attribute:</p>
               <div className="text-xl font-space font-extrabold text-[#2323ff]">
                 {scan.detectedBrand !== "None" ? scan.detectedBrand : "No Licensed Brand Target"}
               </div>
             </div>
             {scan.violationVectors.length > 0 && (
               <div className="space-y-2 pt-1">
-                <p className="text-xs text-gray-600 font-medium">Flagged Violation Vectors:</p>
+                <p className="text-xs text-gray-500 font-medium">Flagged Violation Vectors:</p>
                 <div className="flex flex-wrap gap-1.5">
                   {scan.violationVectors.map((vec, i) => (
-                    <span key={i} className="px-2.5 py-1 text-[10px] font-mono font-bold bg-red-500/10 border border-red-500/30 text-red-400 rounded">
+                    <span key={i} className="px-2.5 py-1 text-[10px] font-mono font-bold bg-red-50 border border-red-300 text-red-600 rounded">
                       {vec}
                     </span>
                   ))}
@@ -126,10 +126,10 @@ export default function ResultDashboard({ scan, onReset }: ResultDashboardProps)
 
           {/* UPLOADED IMAGE PREVIEW */}
           <div className={`p-5 ${card}`}>
-            <h4 className="font-space font-bold text-gray-400 text-xs uppercase tracking-widest mb-3">
+            <h4 className="font-space font-bold text-gray-500 text-xs uppercase tracking-widest mb-3">
               Uploaded Analysis Target
             </h4>
-            <div className="aspect-square w-full rounded-xl overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center">
+            <div className="aspect-square w-full rounded-xl overflow-hidden bg-gray-50 border border-gray-200 flex items-center justify-center">
               <img src={scan.imageUrl} alt="Product visual" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
             </div>
           </div>
@@ -141,35 +141,35 @@ export default function ResultDashboard({ scan, onReset }: ResultDashboardProps)
           {/* SUB-SCORES */}
           <div className={`p-5 ${card} space-y-5`}>
             <div>
-              <h3 className="font-space font-bold text-white text-base">Individual Agent Threat Assessment</h3>
+              <h3 className="font-space font-bold text-gray-900 text-base">Individual Agent Threat Assessment</h3>
               <p className="text-xs text-gray-500 mt-1">Weighted probabilities that make up the final score.</p>
             </div>
             <div className="space-y-4">
               {subScoreKeys.map((bar, idx) => (
                 <div key={idx} className="space-y-1.5">
                   <div className="flex justify-between items-center text-sm">
-                    <span className="font-space font-semibold text-gray-300">{bar.label}</span>
-                    <span className="font-mono text-white font-extrabold">{Math.round(bar.val * 100)}%</span>
+                    <span className="font-space font-semibold text-gray-700">{bar.label}</span>
+                    <span className="font-mono text-gray-900 font-extrabold">{Math.round(bar.val * 100)}%</span>
                   </div>
-                  <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                  <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-1000 ${getBarColor(bar.val)}`}
                       style={{ width: `${bar.val * 100}%` }}
                     />
                   </div>
-                  <p className="text-[11px] text-gray-600 font-sans leading-relaxed">{bar.desc}</p>
+                  <p className="text-[11px] text-gray-500 font-sans leading-relaxed">{bar.desc}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* COMPLIANCE CHECKLIST */}
-          <div className="p-5 bg-amber-500/5 border border-amber-500/20 rounded-2xl space-y-3">
+          <div className="p-5 bg-amber-50 border border-amber-200 rounded-2xl space-y-3">
             <div className="flex items-center gap-2">
-              <Lightbulb className="w-4 h-4 text-amber-400 shrink-0" />
-              <h3 className="font-space font-extrabold text-amber-300 text-sm">Required Compliance Checklist</h3>
+              <Lightbulb className="w-4 h-4 text-amber-500 shrink-0" />
+              <h3 className="font-space font-extrabold text-amber-700 text-sm">Required Compliance Checklist</h3>
             </div>
-            <div className="text-sm text-gray-400 leading-relaxed font-sans whitespace-pre-wrap">
+            <div className="text-sm text-gray-700 leading-relaxed font-sans whitespace-pre-wrap">
               {scan.optimizationAdvice}
             </div>
           </div>
@@ -177,7 +177,7 @@ export default function ResultDashboard({ scan, onReset }: ResultDashboardProps)
           {/* CHAIN OF THOUGHT ACCORDION */}
           <div className="space-y-3">
             <div>
-              <h3 className="font-space font-bold text-white text-base">Pre-Publication Forensics Logs</h3>
+              <h3 className="font-space font-bold text-gray-900 text-base">Pre-Publication Forensics Logs</h3>
               <p className="text-xs text-gray-500 mt-1">Collapsible reasoning traces from each AI scanner layer.</p>
             </div>
             <div className="space-y-2">
@@ -187,17 +187,17 @@ export default function ResultDashboard({ scan, onReset }: ResultDashboardProps)
                   <div key={item.key} className={`${card} overflow-hidden`}>
                     <button
                       onClick={() => setOpenSection(isOpen ? "" : item.key)}
-                      className="w-full px-4 py-3.5 text-left flex items-center justify-between hover:bg-white/5 transition-colors"
+                      className="w-full px-4 py-3.5 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
                     >
-                      <div className="flex items-center gap-2.5 text-sm font-space font-semibold text-gray-300">
+                      <div className="flex items-center gap-2.5 text-sm font-space font-semibold text-gray-700">
                         {item.icon}
                         {item.label}
                       </div>
-                      <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                      <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`} />
                     </button>
                     {isOpen && (
-                      <div className="px-4 pb-4 pt-1 border-t border-white/5">
-                        <p className="text-xs text-gray-400 leading-relaxed font-mono whitespace-pre-wrap mt-2 bg-white/5 p-3 rounded-lg border border-white/5">
+                      <div className="px-4 pb-4 pt-1 border-t border-gray-100">
+                        <p className="text-xs text-gray-700 leading-relaxed font-mono whitespace-pre-wrap mt-2 bg-gray-50 p-3 rounded-lg border border-gray-100">
                           {item.value}
                         </p>
                       </div>

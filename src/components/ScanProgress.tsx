@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { 
-  Sparkles, Search, Activity, FileText, Database, 
+import {
+  Sparkles, Search, Activity, FileText, Database,
   CheckCircle2, RefreshCw, AlertCircle
 } from "lucide-react";
 
@@ -13,54 +13,18 @@ export default function ScanProgress({ marketplace }: ScanProgressProps) {
 
   useEffect(() => {
     const intervals = [1200, 2400, 3600, 4800, 6000];
-    const timers = intervals.map((time, idx) => {
-      return setTimeout(() => {
-        setStage(idx + 1);
-      }, time);
-    });
-
+    const timers = intervals.map((time, idx) => setTimeout(() => setStage(idx + 1), time));
     return () => timers.forEach(t => clearTimeout(t));
   }, []);
 
   const agents = [
-    {
-      id: 1,
-      name: "Agent 1: Advanced Multimodal Scanner",
-      desc: "Sees characters, shapes, and trademark coordinates...",
-      doneDesc: "Scanned visual features. Found shape correlations.",
-      icon: <Sparkles className="w-5 h-5" />
-    },
-    {
-      id: 2,
-      name: "Agent 2: Global Database Index Solver",
-      desc: "Reverse-searching image across 10B indexed listings...",
-      doneDesc: "Completed web index cross-match search.",
-      icon: <Search className="w-5 h-5" />
-    },
-    {
-      id: 3,
-      name: "Agent 3: Blur Detective (Forensics)",
-      desc: "Checking grayscale Laplacian std-dev and Fourier bands...",
-      doneDesc: "Zone analysis finished. Obfuscation metrics updated.",
-      icon: <Activity className="w-5 h-5" />
-    },
-    {
-      id: 4,
-      name: "Agent 4: Text Lexicon Decoder",
-      desc: "Fuzzy-matching titles and synonym soundex codes...",
-      doneDesc: "Spelling and synonym checks completed.",
-      icon: <FileText className="w-5 h-5" />
-    },
-    {
-      id: 5,
-      name: "Agent 5: Probabilistic Fusion Engine",
-      desc: "Cross-matching visual findings against text proxy triggers...",
-      doneDesc: "Fused parallel agents. Finished risk weighting.",
-      icon: <Database className="w-5 h-5" />
-    }
+    { id: 1, name: "Agent 1: Advanced Multimodal Scanner",     desc: "Sees characters, shapes, and trademark coordinates...",         doneDesc: "Scanned visual features. Found shape correlations.",      icon: <Sparkles className="w-5 h-5" /> },
+    { id: 2, name: "Agent 2: Global Database Index Solver",    desc: "Reverse-searching image across 10B indexed listings...",       doneDesc: "Completed web index cross-match search.",                 icon: <Search   className="w-5 h-5" /> },
+    { id: 3, name: "Agent 3: Blur Detective (Forensics)",      desc: "Checking grayscale Laplacian std-dev and Fourier bands...",    doneDesc: "Zone analysis finished. Obfuscation metrics updated.",   icon: <Activity className="w-5 h-5" /> },
+    { id: 4, name: "Agent 4: Text Lexicon Decoder",            desc: "Fuzzy-matching titles and synonym soundex codes...",           doneDesc: "Spelling and synonym checks completed.",                  icon: <FileText className="w-5 h-5" /> },
+    { id: 5, name: "Agent 5: Probabilistic Fusion Engine",     desc: "Cross-matching visual findings against text proxy triggers...", doneDesc: "Fused parallel agents. Finished risk weighting.",       icon: <Database className="w-5 h-5" /> }
   ];
 
-  // Computed percentages
   const progressPct = Math.round((stage / 5) * 100);
 
   const getTickerMsg = () => {
@@ -73,12 +37,12 @@ export default function ScanProgress({ marketplace }: ScanProgressProps) {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-8 bg-[#111111] border border-white/5 rounded-3xl text-white shadow-xl space-y-8 animate-pulse-slow">
+    <div className="max-w-xl mx-auto p-8 bg-white border border-gray-200 rounded-3xl text-gray-900 shadow-lg space-y-8">
       <div className="text-center space-y-2">
-        <h3 className="text-xl font-space font-extrabold tracking-tight">
+        <h3 className="text-xl font-space font-extrabold tracking-tight text-gray-900">
           SCANNING FOR INTELLECTUAL PROPERTY RISKS
         </h3>
-        <p className="text-xs text-gray-400 font-sans">
+        <p className="text-xs text-gray-500 font-sans">
           Performing 8-second parallel fusions for {marketplace} Pre-Publication safety.
         </p>
       </div>
@@ -89,38 +53,38 @@ export default function ScanProgress({ marketplace }: ScanProgressProps) {
           <span className="text-brand-green font-bold">Progress Rate</span>
           <span className="text-[#2cff05] font-bold">{progressPct}%</span>
         </div>
-        <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden border border-white/5">
-          <div 
+        <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden border border-gray-200">
+          <div
             className="h-full bg-gradient-to-r from-brand-blue to-cyan-500 rounded-full transition-all duration-500"
             style={{ width: `${progressPct}%` }}
-          ></div>
+          />
         </div>
       </div>
 
       {/* Agents List */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         {agents.map((agent) => {
           const isDone = stage >= agent.id;
           const isCurrent = stage + 1 === agent.id;
 
           return (
-            <div 
+            <div
               key={agent.id}
               className={`p-4 rounded-xl border flex items-center justify-between gap-4 transition-all duration-300 ${
-                isDone 
-                  ? "bg-brand-blue/5 border-brand-blue/30 text-white" 
-                  : isCurrent 
-                  ? "bg-white/[0.03] border-brand-green/30 text-white"
-                  : "bg-transparent border-white/[0.03] text-gray-600"
+                isDone
+                  ? "bg-blue-50 border-blue-200 text-gray-900"
+                  : isCurrent
+                  ? "bg-green-50 border-green-200 text-gray-900"
+                  : "bg-transparent border-gray-100 text-gray-400"
               }`}
             >
               <div className="flex items-center gap-3">
                 <div className={`p-2 rounded-lg ${
-                  isDone 
-                    ? "bg-brand-blue/20 text-[#2cff05]" 
-                    : isCurrent 
-                    ? "bg-brand-green/10 text-brand-green animate-spin" 
-                    : "bg-white/5 text-gray-650"
+                  isDone
+                    ? "bg-blue-100 text-[#2cff05]"
+                    : isCurrent
+                    ? "bg-green-100 text-brand-green animate-spin"
+                    : "bg-gray-100 text-gray-400"
                 }`}>
                   {agent.icon}
                 </div>
@@ -128,7 +92,7 @@ export default function ScanProgress({ marketplace }: ScanProgressProps) {
                   <h4 className="text-sm font-space font-bold">
                     {agent.name}
                   </h4>
-                  <p className="text-xs text-gray-400 font-sans mt-0.5">
+                  <p className="text-xs text-gray-500 font-sans mt-0.5">
                     {isDone ? agent.doneDesc : agent.desc}
                   </p>
                 </div>
@@ -140,7 +104,7 @@ export default function ScanProgress({ marketplace }: ScanProgressProps) {
                 ) : isCurrent ? (
                   <RefreshCw className="w-4 h-4 text-brand-green animate-spin" />
                 ) : (
-                  <div className="w-3.5 h-3.5 bg-white/5 rounded-full border border-white/10"></div>
+                  <div className="w-3.5 h-3.5 bg-gray-200 rounded-full border border-gray-300" />
                 )}
               </div>
             </div>
@@ -148,8 +112,8 @@ export default function ScanProgress({ marketplace }: ScanProgressProps) {
         })}
       </div>
 
-      {/* Micro-ticker alert */}
-      <div className="flex items-center gap-2.5 bg-white/[0.02] border border-white/5 p-4 rounded-xl text-xs text-gray-400 font-mono">
+      {/* Micro-ticker */}
+      <div className="flex items-center gap-2.5 bg-gray-50 border border-gray-200 p-4 rounded-xl text-xs text-gray-600 font-mono">
         <AlertCircle className="w-4 h-4 text-brand-green shrink-0 animate-bounce" />
         <span className="truncate">{getTickerMsg()}</span>
       </div>

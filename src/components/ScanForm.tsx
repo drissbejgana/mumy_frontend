@@ -64,15 +64,15 @@ export default function ScanForm({ onSubmit, loading }: ScanFormProps) {
     onSubmit({ imageUrl: imagePreview, title, description, tags, marketplace });
   };
 
-  const inputClass = "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm font-sans text-white placeholder-gray-600 focus:outline-none focus:border-[#2323ff] transition-colors";
-  const labelClass = "text-xs font-space font-extrabold text-gray-400 uppercase tracking-wide";
+  const inputClass = "w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-sans text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#2323ff] transition-colors";
+  const labelClass = "text-xs font-space font-extrabold text-gray-600 uppercase tracking-wide";
 
   return (
     <form onSubmit={triggerSubmit} className="space-y-6 max-w-3xl mx-auto">
       {/* Form header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-xl font-space font-extrabold text-white">
+          <h2 className="text-xl font-space font-extrabold text-gray-900">
             Build Pre-Publication Proof
           </h2>
           <p className="text-sm text-gray-500 font-sans mt-0.5">
@@ -94,7 +94,7 @@ export default function ScanForm({ onSubmit, loading }: ScanFormProps) {
         {/* LEFT: IMAGE UPLOADER */}
         <div className="space-y-2">
           <label className={labelClass}>
-            1. Image Upload <span className="text-red-400">*</span>
+            1. Image Upload <span className="text-red-500">*</span>
           </label>
           <div
             onDragEnter={handleDrag}
@@ -104,33 +104,33 @@ export default function ScanForm({ onSubmit, loading }: ScanFormProps) {
             onClick={() => fileInputRef.current?.click()}
             className={`aspect-square w-full rounded-2xl border-2 border-dashed flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-all duration-300 relative overflow-hidden ${
               dragActive
-                ? "border-[#2323ff] bg-[#2323ff]/10"
-                : "border-white/10 hover:border-white/20 bg-white/5"
+                ? "border-[#2323ff] bg-[#2323ff]/5"
+                : "border-gray-300 hover:border-gray-400 bg-gray-50"
             }`}
           >
             <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
 
             {imagePreview ? (
-              <div className="absolute inset-0 bg-[#111111] flex flex-col items-center justify-center p-2">
+              <div className="absolute inset-0 bg-white flex flex-col items-center justify-center p-2">
                 <img src={imagePreview} alt="Scan preview" className="w-full h-full object-contain rounded-xl" referrerPolicy="no-referrer" />
                 <button
                   type="button"
                   onClick={(e) => { e.stopPropagation(); setImagePreview(null); }}
-                  className="absolute top-3 right-3 bg-black/70 hover:bg-black text-white px-2.5 py-1 rounded-lg text-xs transition-colors"
+                  className="absolute top-3 right-3 bg-black/60 hover:bg-black text-white px-2.5 py-1 rounded-lg text-xs transition-colors"
                 >
                   ✕ Remove
                 </button>
               </div>
             ) : (
               <div className="space-y-3">
-                <div className="p-3 bg-white/5 border border-white/10 rounded-full inline-flex mx-auto">
+                <div className="p-3 bg-gray-100 border border-gray-200 rounded-full inline-flex mx-auto">
                   <Upload className="w-6 h-6 text-[#2323ff]" />
                 </div>
                 <div>
-                  <p className="font-space font-bold text-gray-300 text-sm">
+                  <p className="font-space font-bold text-gray-700 text-sm">
                     Drag and drop your image, or <span className="text-[#2323ff]">browse</span>
                   </p>
-                  <p className="text-xs text-gray-600 font-sans mt-1">PNG, JPG, WEBP, or GIF up to 10MB</p>
+                  <p className="text-xs text-gray-400 font-sans mt-1">PNG, JPG, WEBP, or GIF up to 10MB</p>
                 </div>
               </div>
             )}
@@ -141,8 +141,8 @@ export default function ScanForm({ onSubmit, loading }: ScanFormProps) {
         <div className="space-y-4">
           <div className="space-y-1.5">
             <label className={`${labelClass} flex justify-between`}>
-              <span>2. Product Title <span className="text-gray-600 font-medium normal-case">(Recommended)</span></span>
-              <span className="text-gray-600 font-mono font-medium">{title.length}/140</span>
+              <span>2. Product Title <span className="text-gray-400 font-medium normal-case">(Recommended)</span></span>
+              <span className="text-gray-400 font-mono font-medium">{title.length}/140</span>
             </label>
             <input
               type="text"
@@ -156,35 +156,35 @@ export default function ScanForm({ onSubmit, loading }: ScanFormProps) {
 
           <div className="space-y-1.5">
             <label className={labelClass}>
-              3. Destination Marketplace <span className="text-red-400">*</span>
+              3. Destination Marketplace <span className="text-red-500">*</span>
             </label>
             <select
               value={marketplace}
               onChange={(e) => setMarketplace(e.target.value)}
               className={`${inputClass} font-space font-bold`}
             >
-              <option value="All Marketplaces" className="bg-[#111111]">All Marketplaces (Scan Everywhere)</option>
-              <option value="Etsy" className="bg-[#111111]">Etsy Shop</option>
-              <option value="Redbubble" className="bg-[#111111]">Redbubble Catalog</option>
-              <option value="Amazon Merch" className="bg-[#111111]">Amazon Merch on Demand</option>
-              <option value="Teepublic" className="bg-[#111111]">Teepublic Store</option>
-              <option value="Society6" className="bg-[#111111]">Society6 Portfolio</option>
-              <option value="Zazzle" className="bg-[#111111]">Zazzle Marketplace</option>
-              <option value="Spring" className="bg-[#111111]">Spring (TeeSpring) Store</option>
-              <option value="Spreadshirt" className="bg-[#111111]">Spreadshirt Marketplace</option>
-              <option value="CafePress" className="bg-[#111111]">CafePress Store</option>
-              <option value="Printify" className="bg-[#111111]">Printify Shop</option>
-              <option value="Printful" className="bg-[#111111]">Printful Store</option>
-              <option value="eBay" className="bg-[#111111]">eBay Store</option>
-              <option value="Shopify" className="bg-[#111111]">Shopify Store</option>
-              <option value="WooCommerce" className="bg-[#111111]">WooCommerce Store</option>
-              <option value="Other" className="bg-[#111111]">Other Marketplace</option>
+              <option value="All Marketplaces">All Marketplaces (Scan Everywhere)</option>
+              <option value="Etsy">Etsy Shop</option>
+              <option value="Redbubble">Redbubble Catalog</option>
+              <option value="Amazon Merch">Amazon Merch on Demand</option>
+              <option value="Teepublic">Teepublic Store</option>
+              <option value="Society6">Society6 Portfolio</option>
+              <option value="Zazzle">Zazzle Marketplace</option>
+              <option value="Spring">Spring (TeeSpring) Store</option>
+              <option value="Spreadshirt">Spreadshirt Marketplace</option>
+              <option value="CafePress">CafePress Store</option>
+              <option value="Printify">Printify Shop</option>
+              <option value="Printful">Printful Store</option>
+              <option value="eBay">eBay Store</option>
+              <option value="Shopify">Shopify Store</option>
+              <option value="WooCommerce">WooCommerce Store</option>
+              <option value="Other">Other Marketplace</option>
             </select>
           </div>
 
           <div className="space-y-1.5">
             <label className={labelClass}>
-              4. Backend Search Tags <span className="text-gray-600 font-mono font-medium normal-case">(Comma separated)</span>
+              4. Backend Search Tags <span className="text-gray-400 font-mono font-medium normal-case">(Comma separated)</span>
             </label>
             <input
               type="text"
@@ -200,8 +200,8 @@ export default function ScanForm({ onSubmit, loading }: ScanFormProps) {
       {/* Description */}
       <div className="space-y-1.5">
         <label className={`${labelClass} flex justify-between`}>
-          <span>5. Listing Description <span className="text-gray-600 font-medium normal-case">(Optional)</span></span>
-          <span className="text-gray-600 font-mono font-medium">{description.length}/500</span>
+          <span>5. Listing Description <span className="text-gray-400 font-medium normal-case">(Optional)</span></span>
+          <span className="text-gray-400 font-mono font-medium">{description.length}/500</span>
         </label>
         <textarea
           rows={3}
@@ -219,7 +219,7 @@ export default function ScanForm({ onSubmit, loading }: ScanFormProps) {
         disabled={loading || !imagePreview}
         className={`w-full py-4 px-6 rounded-2xl font-space font-extrabold text-base flex items-center justify-center gap-2 transition-all ${
           !imagePreview
-            ? "bg-white/5 text-gray-600 cursor-not-allowed border border-white/5"
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
             : "bg-[#2323ff] hover:bg-blue-700 text-white cursor-pointer shadow-lg"
         }`}
       >
@@ -234,8 +234,8 @@ export default function ScanForm({ onSubmit, loading }: ScanFormProps) {
       </button>
 
       {/* Disclaimer */}
-      <div className="flex items-center gap-2 bg-white/5 border border-white/10 p-4 rounded-xl text-xs text-gray-500 font-sans leading-relaxed">
-        <BadgeInfo className="w-5 h-5 text-gray-600 shrink-0" />
+      <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 p-4 rounded-xl text-xs text-gray-500 font-sans leading-relaxed">
+        <BadgeInfo className="w-5 h-5 text-gray-400 shrink-0" />
         <span>MUMY runs deep visual forensics, Web Entity matches, and NLP spelling classifiers. This report helps identify risks but does not constitute official legal advice. Always review copyright guidelines.</span>
       </div>
     </form>
