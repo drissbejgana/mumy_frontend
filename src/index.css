@@ -7,7 +7,6 @@
   --font-space: "Space Grotesk", sans-serif;
   
   --color-brand-blue: #2323ff;
-  --color-brand-green: #2cff05;
   --color-brand-dark: #E5E7EB;
   
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -22,7 +21,7 @@
 }
 
 .glow-hover:hover {
-  box-shadow: 0 0 15px rgba(44, 255, 5, 0.4);
+  box-shadow: 0 0 15px rgba(35, 35, 255, 0.4);
 }
 
 /* Semicircle Gauge visual indicators */

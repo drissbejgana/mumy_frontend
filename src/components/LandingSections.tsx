@@ -21,26 +21,26 @@ export function Hero({ onStartScan }: { onStartScan: () => void }) {
     <section id="overview" className="relative min-h-[92vh] flex flex-col justify-center items-center py-20 px-4 grid-bg-pattern bg-brand-dark overflow-hidden">
       {/* Ambient Glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-brand-blue/15 rounded-full blur-[140px] pointer-events-none"></div>
-      <div className="absolute bottom-10 right-10 w-[300px] h-[300px] bg-brand-green/10 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute bottom-10 right-10 w-[300px] h-[300px] bg-brand-blue/10 rounded-full blur-[100px] pointer-events-none"></div>
 
       <div className="max-w-5xl mx-auto text-center space-y-8 relative z-10">
 
         {/* Pre-headline tag */}
-        <div className="inline-flex items-center gap-2 bg-white border border-gray-300 px-4 py-1.5 rounded-full text-brand-green text-xs font-mono tracking-wider shadow-sm">
-          <Sparkles className="w-3.5 h-3.5 text-brand-green animate-pulse" />
+        <div className="inline-flex items-center gap-2 bg-white border border-gray-300 px-4 py-1.5 rounded-full text-brand-blue text-xs font-mono tracking-wider shadow-sm">
+          <Sparkles className="w-3.5 h-3.5 text-brand-blue animate-pulse" />
           AI-POWERED PRE-PUBLICATION FORENSICS
         </div>
 
         {/* Large Typography Accent Headings */}
         <h1 className="text-4xl sm:text-6xl md:text-7xl font-space font-extrabold text-gray-900 leading-tight tracking-tight">
           DON'T LET ONE LISTING <br className="hidden sm:inline" />
-          <span className="bg-gradient-to-r from-red-500 via-amber-400 to-brand-green bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-red-500 via-amber-400 to-brand-blue bg-clip-text text-transparent">
             COST YOU YOUR STORE.
           </span>
         </h1>
 
         <p className="max-w-3xl mx-auto text-base sm:text-xl text-gray-600 font-sans leading-relaxed">
-          MUMY scans your product image, title, tags, and description in <span className="text-gray-900 font-extrabold underline decoration-brand-green">8 seconds</span> — and tells you exactly what to fix before Etsy or Redbubble crawlers suspend your account.
+          MUMY scans your product image, title, tags, and description in <span className="text-gray-900 font-extrabold underline decoration-brand-blue">8 seconds</span> — and tells you exactly what to fix before Etsy or Redbubble crawlers suspend your account.
         </p>
 
         {/* ACCOUNT SUSPENDED MOCKUP */}
@@ -79,13 +79,13 @@ export function Hero({ onStartScan }: { onStartScan: () => void }) {
         <div className="pt-8 border-t border-gray-200 flex flex-wrap justify-center items-center gap-y-4 gap-x-8 text-gray-500 text-xs sm:text-sm font-mono">
           <div>Trusted by <span className="text-gray-900 font-bold">12,024+ sellers</span></div>
           <span className="hidden sm:inline text-gray-300">•</span>
-          <div><span className="text-brand-green font-bold">98.7%</span> detection accuracy</div>
+          <div><span className="text-brand-blue font-bold">98.7%</span> detection accuracy</div>
           <span className="hidden sm:inline text-gray-300">•</span>
           <div><span className="text-gray-900 font-bold">&lt; 8s</span> scan time</div>
         </div>
 
         {/* Listings protected counter */}
-        <div className="font-sans text-xs text-brand-green bg-brand-green/5 border border-brand-green/20 px-4 py-1.5 rounded-full inline-block font-bold">
+        <div className="font-sans text-xs text-brand-blue bg-brand-blue/5 border border-brand-blue/20 px-4 py-1.5 rounded-full inline-block font-bold">
           Listings checked today: <span className="font-mono text-gray-900 text-sm ml-1 font-black">{protectedCount}</span>
         </div>
 
@@ -140,7 +140,7 @@ export function Hero({ onStartScan }: { onStartScan: () => void }) {
       <div className="absolute bottom-0 left-0 w-full overflow-hidden bg-gray-200/70 border-y border-gray-300 py-3 relative z-10 mt-12">
         <div className="flex whitespace-nowrap gap-12 font-mono text-[11px] uppercase tracking-wide text-gray-600 animate-scroll">
           <span className="inline-flex items-center gap-1.5">
-            <AlertCircle className="w-3.5 h-3.5 text-brand-green" /> A seller avoided ban on Etsy by removing secret Pikachu print layers (3.2s)
+            <AlertCircle className="w-3.5 h-3.5 text-brand-blue" /> A seller avoided ban on Etsy by removing secret Pikachu print layers (3.2s)
           </span>
           <span className="text-gray-400">|</span>
           <span className="inline-flex items-center gap-1.5">
@@ -148,11 +148,11 @@ export function Hero({ onStartScan }: { onStartScan: () => void }) {
           </span>
           <span className="text-gray-400">|</span>
           <span className="inline-flex items-center gap-1.5">
-            <AlertCircle className="w-3.5 h-3.5 text-brand-green" /> Trademark identified & fixed: 'Disney Castle font style guide matches'
+            <AlertCircle className="w-3.5 h-3.5 text-brand-blue" /> Trademark identified & fixed: 'Disney Castle font style guide matches'
           </span>
           <span className="text-gray-400">|</span>
           <span className="inline-flex items-center gap-1.5">
-            <AlertCircle className="w-3.5 h-3.5 text-brand-green" /> Obfuscated blurred overlays unpacked and exposed on anime vector
+            <AlertCircle className="w-3.5 h-3.5 text-brand-blue" /> Obfuscated blurred overlays unpacked and exposed on anime vector
           </span>
         </div>
       </div>
@@ -307,7 +307,7 @@ export function HowItWorks() {
 
           {steps.map((s, idx) => (
             <div key={idx} className="bg-white p-8 rounded-2xl space-y-4 border border-gray-200 relative z-10 shadow-sm">
-              <div className="font-space font-black text-4xl text-brand-green leading-none">
+              <div className="font-space font-black text-4xl text-brand-blue leading-none">
                 {s.num}
               </div>
               <h3 className="text-lg font-space font-bold text-gray-900">
@@ -341,7 +341,7 @@ export function AgentExplainer() {
       <div className="max-w-6xl mx-auto px-4">
 
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center gap-1.5 text-brand-green text-xs font-mono font-bold uppercase tracking-widest bg-brand-green/5 border border-brand-green/20 px-3 py-1 rounded-full">
+          <div className="inline-flex items-center gap-1.5 text-brand-blue text-xs font-mono font-bold uppercase tracking-widest bg-brand-blue/5 border border-brand-blue/20 px-3 py-1 rounded-full">
             <Terminal className="w-3.5 h-3.5 shrink-0" />
             5 PARALLEL SCANNER AGENTS
           </div>
@@ -362,7 +362,7 @@ export function AgentExplainer() {
               }`}
             >
               <div className="space-y-3">
-                <span className="font-mono text-brand-green text-xs font-bold uppercase block tracking-wider">
+                <span className="font-mono text-brand-blue text-xs font-bold uppercase block tracking-wider">
                   LAYER 0{i+1} ACTIVE
                 </span>
                 <h3 className="text-xl font-space font-bold text-gray-900">
@@ -373,7 +373,7 @@ export function AgentExplainer() {
                 </p>
               </div>
 
-              <div className="mt-4 lg:mt-0 font-mono text-[10px] font-bold text-[#2cff05] bg-brand-green/10 border border-brand-green/30 px-3 py-1 rounded self-start shrink-0">
+              <div className="mt-4 lg:mt-0 font-mono text-[10px] font-bold text-[#2323ff] bg-brand-blue/10 border border-brand-blue/30 px-3 py-1 rounded self-start shrink-0">
                 {a.boost}
               </div>
             </div>
@@ -409,7 +409,7 @@ export function SocialProof() {
             <p className="text-xs font-mono text-gray-500 uppercase tracking-widest">Store listings analyzed</p>
           </div>
           <div className="p-8 bg-white border border-gray-200 rounded-2xl shadow-sm">
-            <div className="font-space font-extrabold text-brand-green text-4xl md:text-5xl tracking-tight mb-2">98.7%</div>
+            <div className="font-space font-extrabold text-brand-blue text-4xl md:text-5xl tracking-tight mb-2">98.7%</div>
             <p className="text-xs font-mono text-gray-500 uppercase tracking-widest">Audit block accuracy</p>
           </div>
         </div>
@@ -443,7 +443,7 @@ export function SocialProof() {
                   <h4 className="font-space font-bold text-gray-900 text-sm">
                     {t.name}
                   </h4>
-                  <p className="text-xs text-brand-green font-mono">
+                  <p className="text-xs text-brand-blue font-mono">
                     {t.role}
                   </p>
                 </div>
@@ -466,8 +466,8 @@ export function PricingSection({ onSelectPlan }: { onSelectPlan: (plan: string, 
       <div className="max-w-6xl mx-auto px-4">
 
         <div className="text-center max-w-3xl mx-auto mb-10 space-y-4">
-          <div className="inline-flex items-center gap-1.5 text-brand-green text-xs font-mono font-bold uppercase tracking-widest bg-brand-green/5 border border-brand-green/20 px-3 py-1 rounded-full">
-            <Zap className="w-3.5 h-3.5 text-brand-green shrink-0" />
+          <div className="inline-flex items-center gap-1.5 text-brand-blue text-xs font-mono font-bold uppercase tracking-widest bg-brand-blue/5 border border-brand-blue/20 px-3 py-1 rounded-full">
+            <Zap className="w-3.5 h-3.5 text-brand-blue shrink-0" />
             SECURE YOUR STORE TODAY
           </div>
           <h2 className="text-3xl md:text-5xl font-space font-extrabold text-gray-900">
@@ -480,7 +480,7 @@ export function PricingSection({ onSelectPlan }: { onSelectPlan: (plan: string, 
 
         {/* Billing Toggle */}
         <div className="flex items-center justify-center gap-4 mb-16">
-          <span className={`text-xs sm:text-sm font-space font-bold transition-all duration-200 ${billingCycle === "monthly" ? "text-brand-green" : "text-gray-500"}`}>
+          <span className={`text-xs sm:text-sm font-space font-bold transition-all duration-200 ${billingCycle === "monthly" ? "text-brand-blue" : "text-gray-500"}`}>
             Billed Monthly
           </span>
           <button
@@ -488,10 +488,10 @@ export function PricingSection({ onSelectPlan }: { onSelectPlan: (plan: string, 
             onClick={() => setBillingCycle(prev => prev === "monthly" ? "yearly" : "monthly")}
             className="w-14 h-8 bg-gray-200 border border-gray-300 rounded-full p-1 transition-all duration-300 relative focus:outline-none focus:ring-1 focus:ring-brand-blue"
           >
-            <div className={`w-5.5 h-5.5 bg-[#2323ff] rounded-full transition-all duration-300 ${billingCycle === "yearly" ? "translate-x-6 bg-brand-green" : ""}`} />
+            <div className={`w-5.5 h-5.5 bg-[#2323ff] rounded-full transition-all duration-300 ${billingCycle === "yearly" ? "translate-x-6 bg-brand-blue" : ""}`} />
           </button>
-          <span className={`text-xs sm:text-sm font-space font-bold transition-all duration-200 ${billingCycle === "yearly" ? "text-brand-green" : "text-gray-500"}`}>
-            Billed Annually <span className="text-[9px] bg-brand-green/10 text-brand-green px-2 py-0.5 rounded border border-brand-green/25 font-bold uppercase font-mono ml-1">Save 20%</span>
+          <span className={`text-xs sm:text-sm font-space font-bold transition-all duration-200 ${billingCycle === "yearly" ? "text-brand-blue" : "text-gray-500"}`}>
+            Billed Annually <span className="text-[9px] bg-brand-blue/10 text-brand-blue px-2 py-0.5 rounded border border-brand-blue/25 font-bold uppercase font-mono ml-1">Save 20%</span>
           </span>
         </div>
 
@@ -513,13 +513,13 @@ export function PricingSection({ onSelectPlan }: { onSelectPlan: (plan: string, 
 
               <div className="border-t border-gray-200 pt-6 space-y-3 font-sans text-xs text-gray-700">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-brand-green" /> 3 pre-publication scans/month
+                  <CheckCircle2 className="w-4 h-4 text-brand-blue" /> 3 pre-publication scans/month
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-brand-green" /> Basic brand word matches
+                  <CheckCircle2 className="w-4 h-4 text-brand-blue" /> Basic brand word matches
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-brand-green" /> Standard OCR scanning
+                  <CheckCircle2 className="w-4 h-4 text-brand-blue" /> Standard OCR scanning
                 </div>
                 <div className="flex items-center gap-2 opacity-35">
                   ✕ Full multimodal visual agent
@@ -540,15 +540,15 @@ export function PricingSection({ onSelectPlan }: { onSelectPlan: (plan: string, 
 
           {/* MOST POPULAR: PRO TIER */}
           <div className="p-8 bg-blue-50 border-2 border-[#2323ff] rounded-3xl flex flex-col justify-between hover:scale-[1.02] transition-all relative z-10 shadow-2xl">
-            <div className="absolute top-0 right-8 -translate-y-1/2 bg-[#2cff05] text-gray-900 font-mono text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full">
+            <div className="absolute top-0 right-8 -translate-y-1/2 bg-[#2323ff] text-white font-mono text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full">
               ★ MOST POPULAR
             </div>
 
             <div className="space-y-6">
               <div>
-                <span className="text-xs font-mono text-brand-green uppercase tracking-wider block">PROFESSIONAL</span>
+                <span className="text-xs font-mono text-brand-blue uppercase tracking-wider block">PROFESSIONAL</span>
                 <h3 className="text-2xl font-space font-bold text-gray-900 mt-1">MUMY PRO</h3>
-                <p className="text-xs text-brand-green font-sans mt-0.5">Complete account protection.</p>
+                <p className="text-xs text-brand-blue font-sans mt-0.5">Complete account protection.</p>
               </div>
 
               <div className="space-y-1">
@@ -556,26 +556,26 @@ export function PricingSection({ onSelectPlan }: { onSelectPlan: (plan: string, 
                   {billingCycle === "yearly" ? "$15" : "$19"}
                   <span className="text-sm font-medium text-gray-500">/mo</span>
                 </div>
-                <div className="text-[10px] font-mono text-brand-green uppercase tracking-widest leading-relaxed">
+                <div className="text-[10px] font-mono text-brand-blue uppercase tracking-widest leading-relaxed">
                   {billingCycle === "yearly" ? "$180 billed Annually (Save $48)" : "Instant Portal Activation"}
                 </div>
               </div>
 
               <div className="border-t border-[#2323ff]/30 pt-6 space-y-3 font-sans text-xs text-gray-700">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#2cff05]" /> <span className="font-extrabold text-gray-900">100 scans / month</span>
+                  <CheckCircle2 className="w-4 h-4 text-[#2323ff]" /> <span className="font-extrabold text-gray-900">100 scans / month</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#2cff05]" /> Full 5-agent parallel suite
+                  <CheckCircle2 className="w-4 h-4 text-[#2323ff]" /> Full 5-agent parallel suite
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#2cff05]" /> Pixel obfustication forensics
+                  <CheckCircle2 className="w-4 h-4 text-[#2323ff]" /> Pixel obfustication forensics
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#2cff05]" /> Scan history & dashboard access
+                  <CheckCircle2 className="w-4 h-4 text-[#2323ff]" /> Scan history & dashboard access
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#2cff05]" /> Priority high speed queues
+                  <CheckCircle2 className="w-4 h-4 text-[#2323ff]" /> Priority high speed queues
                 </div>
               </div>
             </div>
@@ -609,19 +609,19 @@ export function PricingSection({ onSelectPlan }: { onSelectPlan: (plan: string, 
 
               <div className="border-t border-gray-200 pt-6 space-y-3 font-sans text-xs text-gray-700">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-brand-green" /> <span className="font-extrabold text-gray-900">2,500 scans / month</span>
+                  <CheckCircle2 className="w-4 h-4 text-brand-blue" /> <span className="font-extrabold text-gray-900">2,500 scans / month</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-brand-green" /> Team member seats (up to 5)
+                  <CheckCircle2 className="w-4 h-4 text-brand-blue" /> Team member seats (up to 5)
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-brand-green" /> Bulk exports and history search
+                  <CheckCircle2 className="w-4 h-4 text-brand-blue" /> Bulk exports and history search
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-brand-green" /> API access token keys
+                  <CheckCircle2 className="w-4 h-4 text-brand-blue" /> API access token keys
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-brand-green" /> Dedicated priority support agent
+                  <CheckCircle2 className="w-4 h-4 text-brand-blue" /> Dedicated priority support agent
                 </div>
               </div>
             </div>
@@ -680,7 +680,7 @@ export function Footer({ onNavigate }: { onNavigate: (path: string) => void }) {
 
         <div className="space-y-3">
           <h4 className="text-gray-900 font-space font-bold text-xs uppercase tracking-wider">Legal Agreements</h4>
-          <ul className="space-y-2.5 text-xs text-brand-green font-mono">
+          <ul className="space-y-2.5 text-xs text-brand-blue font-mono">
             <li>
               <button onClick={() => onNavigate("privacy")} className="hover:underline text-left cursor-pointer">
                 Privacy Policy (GDPR / CCPA)
@@ -693,7 +693,7 @@ export function Footer({ onNavigate }: { onNavigate: (path: string) => void }) {
             </li>
           </ul>
           <div className="flex items-center gap-1.5 text-[10px] bg-gray-100 border border-gray-200 p-2.5 rounded text-gray-500">
-            <BadgeInfo className="w-5 h-5 text-brand-green shrink-0 animate-pulse" />
+            <BadgeInfo className="w-5 h-5 text-brand-blue shrink-0 animate-pulse" />
             <span>Secure billing powered by standard end-to-end encrypted billing protocols.</span>
           </div>
         </div>
@@ -727,8 +727,8 @@ export function MarketplacesSection() {
       <div className="max-w-6xl mx-auto px-4">
 
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center gap-1.5 text-[#2cff05] text-xs font-mono font-bold uppercase tracking-widest bg-brand-green/5 border border-brand-green/20 px-3 py-1 rounded-full">
-            <ShoppingBag className="w-3.5 h-3.5 text-brand-green shrink-0" />
+          <div className="inline-flex items-center gap-1.5 text-[#2323ff] text-xs font-mono font-bold uppercase tracking-widest bg-brand-blue/5 border border-brand-blue/20 px-3 py-1 rounded-full">
+            <ShoppingBag className="w-3.5 h-3.5 text-brand-blue shrink-0" />
             100% UNIVERSAL COMPATIBILITY
           </div>
           <h2 className="text-3xl md:text-5xl font-space font-extrabold text-gray-900">
@@ -750,7 +750,7 @@ export function MarketplacesSection() {
                   <h3 className="font-space font-bold text-lg text-gray-900">
                     {m.name}
                   </h3>
-                  <span className="text-[9px] font-mono font-bold text-[#2cff05] px-2 py-0.5 rounded bg-brand-green/10 border border-brand-green/25 uppercase tracking-wider">
+                  <span className="text-[9px] font-mono font-bold text-[#2323ff] px-2 py-0.5 rounded bg-brand-blue/10 border border-brand-blue/25 uppercase tracking-wider">
                     {m.badge}
                   </span>
                 </div>
@@ -766,14 +766,14 @@ export function MarketplacesSection() {
           {/* Universal Showcase option card */}
           <div className="p-6 bg-gradient-to-br from-brand-blue/15 to-white border border-brand-blue/25 rounded-2xl min-h-[140px] flex flex-col justify-between sm:col-span-2 lg:col-span-1 xl:col-span-1 shadow-sm">
             <div className="space-y-1">
-              <h3 className="font-space font-bold text-lg text-brand-green">
+              <h3 className="font-space font-bold text-lg text-brand-blue">
                 Scan Anywhere
               </h3>
               <p className="text-xs text-gray-700 font-sans leading-relaxed">
                 Need verification for a custom platform? Select the <span className="text-gray-900 font-bold">"All Marketplaces"</span> option to execute a universal check.
               </p>
             </div>
-            <div className="text-[10px] text-brand-green font-mono pt-3 border-t border-brand-blue/15 mt-3">
+            <div className="text-[10px] text-brand-blue font-mono pt-3 border-t border-brand-blue/15 mt-3">
               ✓ Fully customized rulesets
             </div>
           </div>

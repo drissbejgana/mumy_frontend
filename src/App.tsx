@@ -364,19 +364,19 @@ export default function App() {
               <>
                 <button
                   onClick={() => navigateTo("scanner")}
-                  className={`transition-colors cursor-pointer focus:outline-none ${view === "scanner" ? "text-[#2cff05] font-extrabold" : "text-gray-500 hover:text-gray-900"}`}
+                  className={`transition-colors cursor-pointer focus:outline-none ${view === "scanner" ? "text-[#2323ff] font-extrabold" : "text-gray-500 hover:text-gray-900"}`}
                 >
                   Analyze Listing
                 </button>
                 <button
                   onClick={() => navigateTo("history")}
-                  className={`transition-colors cursor-pointer focus:outline-none ${view === "history" ? "text-[#2cff05] font-extrabold" : "text-gray-500 hover:text-gray-900"}`}
+                  className={`transition-colors cursor-pointer focus:outline-none ${view === "history" ? "text-[#2323ff] font-extrabold" : "text-gray-500 hover:text-gray-900"}`}
                 >
                   My Scans History
                 </button>
                 <button
                   onClick={() => navigateTo("dashboard")}
-                  className={`transition-colors cursor-pointer focus:outline-none ${view === "dashboard" ? "text-[#2cff05] font-extrabold" : "text-gray-500 hover:text-gray-900"}`}
+                  className={`transition-colors cursor-pointer focus:outline-none ${view === "dashboard" ? "text-[#2323ff] font-extrabold" : "text-gray-500 hover:text-gray-900"}`}
                 >
                   Dashboard
                 </button>
@@ -407,7 +407,7 @@ export default function App() {
               <div className="flex items-center gap-3">
                 <div className="hidden sm:flex flex-col text-right">
                   <span className="text-xs font-bold leading-none text-gray-900">{user.displayName}</span>
-                  <span className="text-[10px] font-mono text-[#2cff05] font-bold mt-0.5">{user.plan.toUpperCase()} LICENSE</span>
+                  <span className="text-[10px] font-mono text-[#2323ff] font-bold mt-0.5">{user.plan.toUpperCase()} LICENSE</span>
                 </div>
                 <button
                   onClick={() => navigateTo("dashboard")}
@@ -467,9 +467,9 @@ export default function App() {
           <div className="flex flex-col p-6 space-y-4 text-xs font-space font-bold uppercase tracking-wider">
             {user ? (
               <>
-                <button onClick={() => navigateTo("scanner")} className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "scanner" ? "text-[#2cff05]" : "text-gray-600 hover:text-gray-900"}`}>Analyze Listing</button>
-                <button onClick={() => navigateTo("history")} className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "history" ? "text-[#2cff05]" : "text-gray-600 hover:text-gray-900"}`}>My Scans History</button>
-                <button onClick={() => navigateTo("dashboard")} className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "dashboard" ? "text-[#2cff05]" : "text-gray-600 hover:text-gray-900"}`}>Dashboard</button>
+                <button onClick={() => navigateTo("scanner")} className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "scanner" ? "text-[#2323ff]" : "text-gray-600 hover:text-gray-900"}`}>Analyze Listing</button>
+                <button onClick={() => navigateTo("history")} className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "history" ? "text-[#2323ff]" : "text-gray-600 hover:text-gray-900"}`}>My Scans History</button>
+                <button onClick={() => navigateTo("dashboard")} className={`text-left w-full py-2 transition-colors focus:outline-none ${view === "dashboard" ? "text-[#2323ff]" : "text-gray-600 hover:text-gray-900"}`}>Dashboard</button>
                 {user.role === "admin" && (
                   <button onClick={() => navigateTo("admin")} className="text-left w-full py-2 text-red-500 hover:text-red-600 transition-colors focus:outline-none">Admin Console</button>
                 )}
@@ -695,7 +695,7 @@ export default function App() {
                                     {scan.verdict}
                                   </span>
                                 </td>
-                                <td className="p-4 font-mono font-extrabold text-[#2cff05]">{scan.riskScore}%</td>
+                                <td className="p-4 font-mono font-extrabold text-[#2323ff]">{scan.riskScore}%</td>
                                 <td className="p-4">
                                   <div className="flex gap-2">
                                     <button
@@ -782,7 +782,7 @@ export default function App() {
                               <h3 className="font-space font-black text-gray-900 text-lg leading-tight">{user.displayName}</h3>
                               <p className="text-xs text-gray-500 mt-0.5">{user.email}</p>
                             </div>
-                            <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold bg-[#2cff05]/10 text-[#2cff05] rounded-full border border-[#2cff05]/20">
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold bg-[#2323ff]/10 text-[#2323ff] rounded-full border border-[#2323ff]/20">
                               <Zap className="w-3 h-3" />
                               {user.plan.toUpperCase()} LICENSE
                             </div>
@@ -797,7 +797,7 @@ export default function App() {
                               </div>
                               <div className="flex justify-between">
                                 <span className="text-gray-500">Billing</span>
-                                <span className={`font-bold ${user.paymentStatus === "active" ? "text-[#2cff05]" : "text-gray-400"}`}>
+                                <span className={`font-bold ${user.paymentStatus === "active" ? "text-[#2323ff]" : "text-gray-400"}`}>
                                   {user.paymentStatus === "active" ? "✓ active" : "none"}
                                 </span>
                               </div>
@@ -883,7 +883,7 @@ export default function App() {
                               </div>
                               <div className="p-3 bg-gray-50 rounded-xl space-y-1 border border-gray-100">
                                 <p className="text-gray-500 text-[10px] font-mono uppercase">Status</p>
-                                <p className={`font-bold ${user.paymentStatus === "active" ? "text-[#2cff05]" : "text-gray-400"}`}>
+                                <p className={`font-bold ${user.paymentStatus === "active" ? "text-[#2323ff]" : "text-gray-400"}`}>
                                   {user.paymentStatus === "active" ? "Active" : "Inactive"}
                                 </p>
                               </div>
@@ -910,13 +910,13 @@ export default function App() {
                           {!user.referralCode ? (
                             <div className="p-6 bg-white border border-gray-200 rounded-2xl space-y-4 shadow-sm">
                               <div className="flex items-start gap-4">
-                                <div className="w-10 h-10 rounded-xl bg-[#2cff05]/10 border border-[#2cff05]/20 flex items-center justify-center shrink-0">
-                                  <Sparkles className="w-5 h-5 text-[#2cff05]" />
+                                <div className="w-10 h-10 rounded-xl bg-[#2323ff]/10 border border-[#2323ff]/20 flex items-center justify-center shrink-0">
+                                  <Sparkles className="w-5 h-5 text-[#2323ff]" />
                                 </div>
                                 <div>
                                   <h4 className="font-space font-bold text-gray-900 text-sm">Become an Affiliate</h4>
                                   <p className="text-xs text-gray-500 mt-0.5 font-sans leading-relaxed">
-                                    Earn <span className="text-[#2cff05] font-bold">20% commission</span> on every Pro and Agency referral. Share your unique link, get paid automatically when friends upgrade.
+                                    Earn <span className="text-[#2323ff] font-bold">20% commission</span> on every Pro and Agency referral. Share your unique link, get paid automatically when friends upgrade.
                                   </p>
                                 </div>
                               </div>
@@ -930,7 +930,7 @@ export default function App() {
                                   <div className="uppercase">Agency plan</div>
                                 </div>
                                 <div className="p-3 bg-gray-50 rounded-xl space-y-1 border border-gray-100">
-                                  <div className="text-base font-space font-extrabold text-[#2cff05]">∞</div>
+                                  <div className="text-base font-space font-extrabold text-[#2323ff]">∞</div>
                                   <div className="uppercase">No cap</div>
                                 </div>
                               </div>
@@ -946,21 +946,21 @@ export default function App() {
                                     }
                                   } catch {}
                                 }}
-                                className="w-full py-3 bg-[#2cff05] hover:bg-green-400 text-gray-900 font-space font-extrabold text-sm rounded-xl cursor-pointer transition-colors"
+                                className="w-full py-3 bg-[#2323ff] hover:bg-blue-700 text-white font-space font-extrabold text-sm rounded-xl cursor-pointer transition-colors"
                               >
                                 Join Affiliate Program →
                               </button>
                             </div>
                           ) : (
-                            <div className="p-6 bg-white border border-[#2cff05]/30 rounded-2xl space-y-5 shadow-sm">
+                            <div className="p-6 bg-white border border-[#2323ff]/30 rounded-2xl space-y-5 shadow-sm">
                               <div className="flex items-center justify-between">
                                 <div>
                                   <h4 className="font-space font-bold text-gray-900 text-sm flex items-center gap-2">
-                                    <Sparkles className="w-4 h-4 text-[#2cff05]" /> Affiliate Program
+                                    <Sparkles className="w-4 h-4 text-[#2323ff]" /> Affiliate Program
                                   </h4>
                                   <p className="text-[11px] text-gray-500 mt-0.5">Earn 20% commission on Pro & Agency referrals</p>
                                 </div>
-                                <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-[#2cff05]/10 text-[#2cff05] border border-[#2cff05]/20">ACTIVE</span>
+                                <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-[#2323ff]/10 text-[#2323ff] border border-[#2323ff]/20">ACTIVE</span>
                               </div>
                               <div className="grid grid-cols-3 gap-3">
                                 <div className="p-3 bg-gray-50 rounded-xl text-center border border-gray-100">
@@ -968,7 +968,7 @@ export default function App() {
                                   <div className="text-[10px] text-gray-500 font-mono mt-0.5 uppercase">Referrals</div>
                                 </div>
                                 <div className="p-3 bg-gray-50 rounded-xl text-center border border-gray-100">
-                                  <div className="text-xl font-space font-extrabold text-[#2cff05]">${(user.affiliateEarnings ?? 0).toFixed(2)}</div>
+                                  <div className="text-xl font-space font-extrabold text-[#2323ff]">${(user.affiliateEarnings ?? 0).toFixed(2)}</div>
                                   <div className="text-[10px] text-gray-500 font-mono mt-0.5 uppercase">Earned</div>
                                 </div>
                                 <div className="p-3 bg-gray-50 rounded-xl text-center border border-gray-100">
@@ -989,8 +989,8 @@ export default function App() {
                                         onClick={() => { navigator.clipboard.writeText(refLink); setRefLinkCopied(true); setTimeout(() => setRefLinkCopied(false), 2000); }}
                                         className={`shrink-0 px-3 py-2.5 border text-xs font-space font-extrabold rounded-xl cursor-pointer transition-all duration-200 ${
                                           refLinkCopied
-                                            ? "bg-[#2cff05]/20 border-[#2cff05]/60 text-[#2cff05] scale-95"
-                                            : "bg-[#2cff05]/10 hover:bg-[#2cff05]/20 border-[#2cff05]/20 text-[#2cff05]"
+                                            ? "bg-[#2323ff]/20 border-[#2323ff]/60 text-[#2323ff] scale-95"
+                                            : "bg-[#2323ff]/10 hover:bg-[#2323ff]/20 border-[#2323ff]/20 text-[#2323ff]"
                                         }`}
                                       >
                                         {refLinkCopied ? "✓ Copied!" : "Copy"}
@@ -1139,9 +1139,9 @@ export default function App() {
             {/* VIEW 9: STRIPE SUCCESS */}
             {view === "success" && (
               <div className="py-24 flex justify-center items-center px-4">
-                <div className="max-w-xl text-center bg-white border border-[#2cff05]/30 p-8 rounded-3xl text-gray-900 space-y-6 shadow-xl relative overflow-hidden">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 bg-brand-green/10 rounded-full blur-[40px] pointer-events-none"></div>
-                  <div className="p-4 bg-brand-green/10 rounded-full inline-flex text-brand-green border border-[#2cff05]/20 animate-bounce">
+                <div className="max-w-xl text-center bg-white border border-[#2323ff]/30 p-8 rounded-3xl text-gray-900 space-y-6 shadow-xl relative overflow-hidden">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 bg-brand-blue/10 rounded-full blur-[40px] pointer-events-none"></div>
+                  <div className="p-4 bg-brand-blue/10 rounded-full inline-flex text-brand-blue border border-[#2323ff]/20 animate-bounce">
                     <ShieldCheck className="w-12 h-12" />
                   </div>
                   <div className="space-y-2">
@@ -1153,7 +1153,7 @@ export default function App() {
                   <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl text-left text-xs font-mono space-y-2 divide-y divide-gray-200">
                     <div className="flex justify-between pb-2">
                       <span className="text-gray-500">License Badge:</span>
-                      <span className="text-[#2cff05] font-bold">MUMY PROFESSIONAL</span>
+                      <span className="text-[#2323ff] font-bold">MUMY PROFESSIONAL</span>
                     </div>
                     <div className="flex justify-between pt-2">
                       <span className="text-gray-500">Stripe Invoiced:</span>
@@ -1184,7 +1184,7 @@ export default function App() {
                     </p>
                   </div>
                   <div className="p-5 bg-blue-50 border border-blue-200 rounded-2xl text-left space-y-3">
-                    <span className="font-mono text-[9px] font-bold text-brand-green border border-brand-green/35 px-1.5 py-0.5 rounded uppercase">
+                    <span className="font-mono text-[9px] font-bold text-brand-blue border border-brand-blue/35 px-1.5 py-0.5 rounded uppercase">
                       LIMITED RETENTION DISCOUNT
                     </span>
                     <h4 className="font-space font-bold text-gray-900 text-sm">Use code STAY20 for 20% off your first month!</h4>

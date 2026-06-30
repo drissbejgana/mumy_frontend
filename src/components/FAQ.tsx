@@ -45,17 +45,17 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section id="faq" className="py-20 border-t border-white/10 bg-brand-dark relative z-10 w-full shrink-0">
+    <section id="faq" className="py-20 border-t border-gray-200 bg-brand-dark relative z-10 w-full shrink-0">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-brand-blue/10 border border-brand-blue/30 px-3 py-1 rounded-full text-brand-green text-xs font-mono mb-4">
+          <div className="inline-flex items-center gap-2 bg-brand-blue/10 border border-brand-blue/30 px-3 py-1 rounded-full text-brand-blue text-xs font-mono mb-4">
             <HelpCircle className="w-3.5 h-3.5" />
             COMMON QUESTIONS
           </div>
-          <h2 className="text-3xl md:text-4xl font-space font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-space font-bold text-gray-900 mb-4">
             Factual Answers For Serious Sellers
           </h2>
-          <p className="text-gray-400">
+          <p className="text-gray-600">
             Learn how MUMY protects store owners before crawlers flags accounts.
           </p>
         </div>
@@ -66,27 +66,27 @@ export default function FAQ() {
             return (
               <div
                 key={idx}
-                className="bg-[#111111] border border-white/5 rounded-xl overflow-hidden transition-all duration-300"
+                className="bg-white border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 shadow-sm"
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors"
+                  className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 hover:bg-gray-50 transition-colors"
                 >
-                  <span className="font-space font-medium text-white text-base md:text-lg">
+                  <span className="font-space font-medium text-gray-900 text-base md:text-lg">
                     {item.q}
                   </span>
                   <ChevronDown
-                    className={`w-5 h-5 text-brand-green shrink-0 transition-transform duration-300 ${
+                    className={`w-5 h-5 text-brand-blue shrink-0 transition-transform duration-300 ${
                       isOpen ? "rotate-180" : ""
                     }`}
                   />
                 </button>
                 <div
                   className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                    isOpen ? "max-h-96 border-t border-white/5" : "max-h-0"
+                    isOpen ? "max-h-96 border-t border-gray-200" : "max-h-0"
                   }`}
                 >
-                  <p className="p-6 text-gray-400 leading-relaxed text-sm md:text-base">
+                  <p className="p-6 text-gray-600 leading-relaxed text-sm md:text-base">
                     {item.a}
                   </p>
                 </div>

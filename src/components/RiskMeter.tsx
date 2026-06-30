@@ -18,13 +18,13 @@ export default function RiskMeter({ score, confidence }: RiskMeterProps) {
   const needleRotation = -90 + (180 * animatedScore) / 100;
 
   const getGaugeColor = (val: number) => {
-    if (val < 40) return "#2cff05";
+    if (val < 40) return "#22c55e";
     if (val < 75) return "#f59e0b";
     return "#ef4444";
   };
 
   const getVerdictLabel = (val: number) => {
-    if (val < 40) return { label: "LOW RISK",      color: "text-brand-green",  bg: "bg-brand-green/10 border-brand-green/30" };
+    if (val < 40) return { label: "LOW RISK",      color: "text-green-600",    bg: "bg-green-50 border-green-200" };
     if (val < 75) return { label: "MODERATE RISK", color: "text-amber-500",    bg: "bg-amber-100 border-amber-300" };
     return              { label: "CRITICAL RISK",  color: "text-red-600",      bg: "bg-red-50 border-red-300" };
   };

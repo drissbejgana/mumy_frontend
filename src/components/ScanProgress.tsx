@@ -50,8 +50,8 @@ export default function ScanProgress({ marketplace }: ScanProgressProps) {
       {/* Progress Bar */}
       <div className="space-y-2">
         <div className="flex justify-between items-center text-xs font-mono">
-          <span className="text-brand-green font-bold">Progress Rate</span>
-          <span className="text-[#2cff05] font-bold">{progressPct}%</span>
+          <span className="text-brand-blue font-bold">Progress Rate</span>
+          <span className="text-[#2323ff] font-bold">{progressPct}%</span>
         </div>
         <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden border border-gray-200">
           <div
@@ -74,16 +74,16 @@ export default function ScanProgress({ marketplace }: ScanProgressProps) {
                 isDone
                   ? "bg-blue-50 border-blue-200 text-gray-900"
                   : isCurrent
-                  ? "bg-green-50 border-green-200 text-gray-900"
+                  ? "bg-blue-100 border-blue-300 text-gray-900"
                   : "bg-transparent border-gray-100 text-gray-400"
               }`}
             >
               <div className="flex items-center gap-3">
                 <div className={`p-2 rounded-lg ${
                   isDone
-                    ? "bg-blue-100 text-[#2cff05]"
+                    ? "bg-blue-100 text-[#2323ff]"
                     : isCurrent
-                    ? "bg-green-100 text-brand-green animate-spin"
+                    ? "bg-blue-100 text-brand-blue animate-spin"
                     : "bg-gray-100 text-gray-400"
                 }`}>
                   {agent.icon}
@@ -100,9 +100,9 @@ export default function ScanProgress({ marketplace }: ScanProgressProps) {
 
               <div className="shrink-0">
                 {isDone ? (
-                  <CheckCircle2 className="w-5 h-5 text-brand-green" />
+                  <CheckCircle2 className="w-5 h-5 text-brand-blue" />
                 ) : isCurrent ? (
-                  <RefreshCw className="w-4 h-4 text-brand-green animate-spin" />
+                  <RefreshCw className="w-4 h-4 text-brand-blue animate-spin" />
                 ) : (
                   <div className="w-3.5 h-3.5 bg-gray-200 rounded-full border border-gray-300" />
                 )}
@@ -114,7 +114,7 @@ export default function ScanProgress({ marketplace }: ScanProgressProps) {
 
       {/* Micro-ticker */}
       <div className="flex items-center gap-2.5 bg-gray-50 border border-gray-200 p-4 rounded-xl text-xs text-gray-600 font-mono">
-        <AlertCircle className="w-4 h-4 text-brand-green shrink-0 animate-bounce" />
+        <AlertCircle className="w-4 h-4 text-brand-blue shrink-0 animate-bounce" />
         <span className="truncate">{getTickerMsg()}</span>
       </div>
     </div>

@@ -22,7 +22,7 @@ interface AdminStats {
 
 function PlanBadge({ plan }: { plan: string }) {
   const s =
-    plan === "agency" ? "bg-black text-[#2cff05]" :
+    plan === "agency" ? "bg-black text-[#2323ff]" :
     plan === "pro"    ? "bg-[#2323ff]/10 text-[#2323ff]" :
                         "bg-gray-100 text-gray-500";
   return <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${s}`}>{plan}</span>;
@@ -214,13 +214,13 @@ function OverviewTab({ stats }: { stats: AdminStats }) {
             {totalUsers > 0 && <>
               <div className="h-full bg-gray-300"       style={{ width: `${(stats.planDistribution.free   / totalUsers) * 100}%` }} title={`Free: ${stats.planDistribution.free}`} />
               <div className="h-full bg-[#2323ff]"      style={{ width: `${(stats.planDistribution.pro    / totalUsers) * 100}%` }} title={`Pro: ${stats.planDistribution.pro}`} />
-              <div className="h-full bg-[#2cff05]"      style={{ width: `${(stats.planDistribution.agency / totalUsers) * 100}%` }} title={`Agency: ${stats.planDistribution.agency}`} />
+              <div className="h-full bg-[#2323ff]"      style={{ width: `${(stats.planDistribution.agency / totalUsers) * 100}%` }} title={`Agency: ${stats.planDistribution.agency}`} />
             </>}
           </div>
           <div className="space-y-2.5">
             <DistBar label="Free"   value={stats.planDistribution.free}   total={totalUsers} color="bg-gray-300"  />
             <DistBar label="Pro"    value={stats.planDistribution.pro}    total={totalUsers} color="bg-[#2323ff]" />
-            <DistBar label="Agency" value={stats.planDistribution.agency} total={totalUsers} color="bg-[#2cff05]" />
+            <DistBar label="Agency" value={stats.planDistribution.agency} total={totalUsers} color="bg-[#2323ff]" />
           </div>
         </div>
 
@@ -789,7 +789,7 @@ function SettingsTab({ users, onRefresh }: { users: UserProfile[]; onRefresh: ()
   const planLimits = [
     { plan: "free",   scans: 3,    price: "$0",  color: "bg-gray-100 text-gray-600"    },
     { plan: "pro",    scans: 100,  price: "$19", color: "bg-[#2323ff]/10 text-[#2323ff]" },
-    { plan: "agency", scans: "∞",  price: "$79", color: "bg-black text-[#2cff05]"      },
+    { plan: "agency", scans: "∞",  price: "$79", color: "bg-black text-[#2323ff]"      },
   ];
 
   return (

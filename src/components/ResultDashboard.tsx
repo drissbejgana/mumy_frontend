@@ -23,7 +23,7 @@ export default function ResultDashboard({ scan, onReset }: ResultDashboardProps)
   ];
 
   const getBarColor = (val: number) => {
-    if (val < 0.40) return "bg-[#2cff05]";
+    if (val < 0.40) return "bg-[#2323ff]";
     if (val < 0.75) return "bg-amber-400";
     return "bg-red-500";
   };
@@ -53,7 +53,7 @@ export default function ResultDashboard({ scan, onReset }: ResultDashboardProps)
         return {
           border: "border-green-300",
           bg: "bg-green-50",
-          icon: <ShieldCheck className="w-8 h-8 text-[#2cff05] shrink-0" />,
+          icon: <ShieldCheck className="w-8 h-8 text-green-600 shrink-0" />,
           title: "CLEAR — SAFE TO PUBLISH",
           titleColor: "text-green-600",
           desc: "No intellectual property infringement, fuzzy phonetic synonyms or hidden tags were detected. Your listing matches standard compliance guidelines."
